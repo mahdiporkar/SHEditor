@@ -42,6 +42,31 @@
 .she-select:hover {
   background: color-mix(in srgb, var(--she-color-primary) 10%, transparent);
 }
+.she-icon {
+  display: block;
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.she-button--image {
+  padding: 0 8px;
+}
+.she-button--image .she-icon-image {
+  transition:
+    transform 0.16s ease,
+    stroke-width 0.16s ease;
+}
+.she-button--image:hover .she-icon-image {
+  transform: scale(1.08);
+  stroke-width: 2;
+}
+.she-button--image:active .she-icon-image {
+  transform: scale(0.94);
+}
 .she-button[aria-pressed="true"] {
   background: var(--she-color-primary);
   color: #fff;

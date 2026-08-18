@@ -19,6 +19,7 @@ type Tool = {
   command: (editor: SHEditor) => boolean;
   active?: string;
 };
+const imageIcon = `<svg class="she-icon she-icon-image" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="2.5"></rect><circle cx="16.5" cy="8.5" r="1.7"></circle><path d="m5.5 17 4.2-4.5 3.1 3 2.1-2.2 3.6 3.7"></path></svg>`;
 const tools: Tool[] = [
   { key: "undo", icon: "↶", command: (e) => e.commands.undo() },
   { key: "redo", icon: "↷", command: (e) => e.commands.redo() },
@@ -217,8 +218,8 @@ export function createEditorUI(
   toolbar.append(highlight);
   const imageButton = document.createElement("button");
   imageButton.type = "button";
-  imageButton.className = "she-button";
-  imageButton.textContent = "▧";
+  imageButton.className = "she-button she-button--image";
+  imageButton.innerHTML = imageIcon;
   imageButton.title = locale === "fa" ? "درج تصویر" : "Insert image";
   imageButton.setAttribute("aria-label", imageButton.title);
   imageButton.addEventListener("click", () => openImageDialog());
