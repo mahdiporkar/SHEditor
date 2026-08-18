@@ -20,8 +20,6 @@ One floating-layer foundation, dialogs, bubble menu, slash commands, find/replac
 
 Comments, mentions, track changes, external version history and optional Yjs collaboration as independent packages.
 
-## 0.6 AI
-
-Provider-neutral streaming interface with preview/insert/replace/reject workflow. Core will never depend on a vendor.
-
 Every item moves to complete only with model, UI where applicable, commands, serialization, keyboard behavior and automated tests.
+
+AI features and provider integrations are intentionally outside the SHEditor roadmap.

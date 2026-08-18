@@ -12,3 +12,4 @@ coverage/
 .edge-*/
 docs/assets/sheditor-mobile-rtl*.png
 docs/assets/*-final.png
+.pages-publish/

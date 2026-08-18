@@ -56,9 +56,18 @@ export class SHEditor implements SHEditorAPI {
   private run(command: Command): boolean { if (!this.view) return command(this.state); return command(this.view.state, this.view.dispatch, this.view); }
   private makeCommands(): EditorCommands {
     const mark = (name: string) => this.run(toggleMark(schema.marks[name]!));
+    const setMark = (name: string, attrs: Record<string, unknown>) => this.run((state, dispatch) => { const value=schema.marks[name]!.create(attrs); dispatch?.(state.selection.empty?state.tr.addStoredMark(value):state.tr.addMark(state.selection.from,state.selection.to,value)); return true; });
+    const unsetMark = (name: string) => this.run((state, dispatch) => { dispatch?.(state.selection.empty?state.tr.removeStoredMark(schema.marks[name]!):state.tr.removeMark(state.selection.from,state.selection.to,schema.marks[name])); return true; });
+    const allowed = (value: string, values: string[] | undefined, label: string, pattern: RegExp) => { if (!pattern.test(value)) throw new SHEditorError(`SHEditor: unsafe ${label} value.`); if (values?.length && !values.includes(value)) throw new SHEditorError(`SHEditor: ${label} “${value}” is not in the configured allowlist.`); return value; };
+    const textAlign = (alignment: 'left'|'center'|'right'|'justify'|null) => this.run((state, dispatch) => { let tr=state.tr; const { from, to }=state.selection; state.doc.nodesBetween(from,to,(node,pos)=>{ if(node.isTextblock && (node.type===schema.nodes.paragraph || node.type===schema.nodes.heading)) tr=tr.setNodeMarkup(pos,undefined,{...node.attrs,textAlign:alignment}); }); dispatch?.(tr); return tr.docChanged; });
     return {
       focus: () => { this.focus(); return true; }, blur: () => { this.blur(); return true; },
       toggleBold: () => mark('bold'), toggleItalic: () => mark('italic'), toggleUnderline: () => mark('underline'), toggleStrike: () => mark('strike'), toggleCode: () => mark('code'),
+      toggleSubscript: () => mark('subscript'), toggleSuperscript: () => mark('superscript'),
+      setTextColor: color => setMark('text_color',{color:allowed(color,this.options.typography?.colors,'text color',/^(?:#[0-9a-f]{3,8}|rgba?\([\d\s,.%]+\)|[a-z]+)$/i)}), unsetTextColor: () => unsetMark('text_color'),
+      setHighlight: color => setMark('highlight',{color:allowed(color,this.options.typography?.highlights,'highlight',/^(?:#[0-9a-f]{3,8}|rgba?\([\d\s,.%]+\)|[a-z]+)$/i)}), unsetHighlight: () => unsetMark('highlight'),
+      setFontFamily: family => setMark('font_family',{family:allowed(family,this.options.typography?.fontFamilies,'font family',/^[\w\s,'"-]+$/)}), setFontSize: size => setMark('font_size',{size:allowed(size,this.options.typography?.fontSizes,'font size',/^(?:\d+(?:\.\d+)?(?:px|rem|em|%)|small|medium|large)$/i)}),
+      setTextAlign: alignment => textAlign(alignment), unsetTextAlign: () => textAlign(null),
       setParagraph: () => this.run(setBlockType(schema.nodes.paragraph!)), setHeading: level => this.run(setBlockType(schema.nodes.heading!, { level })),
       toggleBulletList: () => this.run(wrapInList(schema.nodes.bullet_list!)), toggleOrderedList: () => this.run(wrapInList(schema.nodes.ordered_list!)), toggleBlockquote: () => this.run(wrapIn(schema.nodes.blockquote!)),
       setLink: (href, title) => { if (!/^https?:|^mailto:|^tel:|^\/|^#/i.test(href)) throw new SHEditorError('SHEditor: unsafe link URL.'); return this.run(toggleMark(schema.marks.link!, { href, title: title ?? null })); },

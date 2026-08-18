@@ -8,6 +8,8 @@ The `Deploy SHEditor Demo` workflow validates and publishes `dist/playground` us
 4. Wait for both the `build` and `deploy` jobs to succeed.
 5. Open the URL shown in the `github-pages` deployment environment.
 
+If the repository does not allow the workflow to perform first-time Pages enablement, a built `gh-pages` branch is also available. In **Settings → Pages**, choose **Deploy from a branch**, select `gh-pages` and `/(root)`, then save. This one-time repository setting cannot be enabled by ordinary source-code pushes.
+
 For this repository, the expected project-site URL is `https://mahdiporkar.github.io/SHEditor/`. It becomes available only after the first successful deployment. The Vite build uses relative assets and hash routes, so repository renames and route refreshes do not require configuration changes.
 
 No secret or personal access token is required. A custom domain can be added later through GitHub Pages settings without changing the build.

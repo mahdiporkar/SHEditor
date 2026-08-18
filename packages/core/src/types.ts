@@ -15,10 +15,12 @@ export interface SHEditorOptions {
   placeholder?: string;
   extensions?: Extension[];
   sanitizer?: SanitizerOptions;
+  typography?: TypographyOptions;
   onUpdate?: (event: EditorUpdate) => void;
   onFocus?: (editor: SHEditorAPI) => void;
   onBlur?: (editor: SHEditorAPI) => void;
 }
+export interface TypographyOptions { fontFamilies?: string[]; fontSizes?: string[]; colors?: string[]; highlights?: string[] }
 export interface SanitizerOptions { allowedTags?: string[]; allowedAttributes?: Record<string, string[]>; allowedSchemes?: string[] }
 export interface ExtensionContext { schema: Schema }
 export interface Extension { name: string; plugins?: (context: ExtensionContext) => import('prosemirror-state').Plugin[] }
@@ -26,6 +28,9 @@ export interface Chain { focus(): Chain; toggleBold(): Chain; toggleItalic(): Ch
 export interface EditorCommands {
   focus(): boolean; blur(): boolean; toggleBold(): boolean; toggleItalic(): boolean; toggleUnderline(): boolean;
   toggleStrike(): boolean; toggleCode(): boolean; setParagraph(): boolean; setHeading(level: number): boolean;
+  toggleSubscript(): boolean; toggleSuperscript(): boolean; setTextColor(color: string): boolean; unsetTextColor(): boolean;
+  setHighlight(color: string): boolean; unsetHighlight(): boolean; setFontFamily(family: string): boolean; setFontSize(size: string): boolean;
+  setTextAlign(alignment: 'left' | 'center' | 'right' | 'justify'): boolean; unsetTextAlign(): boolean;
   toggleBulletList(): boolean; toggleOrderedList(): boolean; toggleBlockquote(): boolean; setLink(href: string, title?: string): boolean;
   unsetLink(): boolean; insertHorizontalRule(): boolean; undo(): boolean; redo(): boolean; clearFormatting(): boolean;
 }

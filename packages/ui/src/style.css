@@ -7,3 +7,4 @@
 .she-editor[data-theme=dark],.she-editor.she-dark{--she-color-bg:#171822;--she-color-surface:#21232f;--she-color-text:#f3f4f8;--she-color-muted:#afb2c1;--she-color-border:#343746;--she-shadow-dropdown:0 16px 44px rgba(0,0,0,.3)}
 @media(max-width:640px){.she-editor{border-radius:12px}.she-toolbar{padding:6px}.she-button{min-width:40px}}
 @media print{.she-toolbar{display:none}.she-editor{border:0;box-shadow:none}}
+.she-color{width:30px;height:30px;padding:4px;border:0;border-radius:8px;background:transparent;cursor:pointer}.she-color::-webkit-color-swatch{border:0;border-radius:5px}.she-highlight{background:color-mix(in srgb,var(--she-color-primary) 8%,transparent)}.she-align{min-width:76px}

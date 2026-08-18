@@ -24,7 +24,7 @@ ProseMirror primitives
 - Extensions are named, typed units; duplicate names fail early. Future node/mark contributions will be composed before schema construction.
 - The default sanitizer is an allowlist. Host additions are explicit and unsafe URL schemes remain rejected.
 - UI text lives in typed `en`, `fa`, and `ar` dictionaries. CSS uses the `she-` namespace and custom properties.
-- Optional future capabilities (tables, images, collaboration, AI) remain outside core package boundaries.
+- Optional future capabilities (tables, images, and collaboration) remain outside core package boundaries. AI integrations are intentionally out of scope.
 
 ## Public packages
 

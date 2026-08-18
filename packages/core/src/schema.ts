@@ -4,10 +4,10 @@ import OrderedMap from 'orderedmap';
 
 const baseNodes: Record<string, NodeSpec> = {
   doc: { content: 'block+' },
-  paragraph: { content: 'inline*', group: 'block', parseDOM: [{ tag: 'p' }], toDOM: () => ['p', 0] },
+  paragraph: { attrs: { textAlign: { default: null } }, content: 'inline*', group: 'block', parseDOM: [{ tag: 'p', getAttrs: dom => ({ textAlign: (dom as HTMLElement).style.textAlign || null }) }], toDOM: node => ['p', node.attrs.textAlign ? { style: `text-align: ${String(node.attrs.textAlign)}` } : {}, 0] },
   text: { group: 'inline' },
   hard_break: { inline: true, group: 'inline', selectable: false, parseDOM: [{ tag: 'br' }], toDOM: () => ['br'] },
-  heading: { attrs: { level: { default: 1 } }, content: 'inline*', group: 'block', defining: true, parseDOM: [1,2,3,4,5,6].map(level => ({ tag: `h${level}`, attrs: { level } })), toDOM: node => [`h${String(node.attrs.level)}`, 0] as const },
+  heading: { attrs: { level: { default: 1 }, textAlign: { default: null } }, content: 'inline*', group: 'block', defining: true, parseDOM: [1,2,3,4,5,6].map(level => ({ tag: `h${level}`, getAttrs: dom => ({ level, textAlign: (dom as HTMLElement).style.textAlign || null }) })), toDOM: node => [`h${String(node.attrs.level)}`, node.attrs.textAlign ? { style: `text-align: ${String(node.attrs.textAlign)}` } : {}, 0] },
   blockquote: { content: 'block+', group: 'block', defining: true, parseDOM: [{ tag: 'blockquote' }], toDOM: () => ['blockquote', 0] },
   code_block: { content: 'text*', marks: '', group: 'block', code: true, defining: true, parseDOM: [{ tag: 'pre', preserveWhitespace: 'full' }], toDOM: () => ['pre', ['code', 0]] },
   horizontal_rule: { group: 'block', parseDOM: [{ tag: 'hr' }], toDOM: () => ['hr'] },
@@ -20,6 +20,12 @@ const marks: Record<string, MarkSpec> = {
   underline: { parseDOM: [{ tag: 'u' }, { style: 'text-decoration=underline' }], toDOM: () => ['u', 0] },
   strike: { parseDOM: [{ tag: 's' }, { tag: 'del' }, { style: 'text-decoration=line-through' }], toDOM: () => ['s', 0] },
   code: { parseDOM: [{ tag: 'code' }], toDOM: () => ['code', 0] },
+  subscript: { excludes: 'superscript', parseDOM: [{ tag: 'sub' }], toDOM: () => ['sub', 0] },
+  superscript: { excludes: 'subscript', parseDOM: [{ tag: 'sup' }], toDOM: () => ['sup', 0] },
+  text_color: { attrs: { color: {} }, parseDOM: [{ style: 'color', getAttrs: value => ({ color: value }) }], toDOM: mark => ['span', { style: `color: ${String(mark.attrs.color)}` }, 0] },
+  highlight: { attrs: { color: {} }, parseDOM: [{ style: 'background-color', getAttrs: value => ({ color: value }) }], toDOM: mark => ['mark', { style: `background-color: ${String(mark.attrs.color)}` }, 0] },
+  font_family: { attrs: { family: {} }, parseDOM: [{ style: 'font-family', getAttrs: value => ({ family: value }) }], toDOM: mark => ['span', { style: `font-family: ${String(mark.attrs.family)}` }, 0] },
+  font_size: { attrs: { size: {} }, parseDOM: [{ style: 'font-size', getAttrs: value => ({ size: value }) }], toDOM: mark => ['span', { style: `font-size: ${String(mark.attrs.size)}` }, 0] },
   link: { attrs: { href: {}, title: { default: null } }, inclusive: false, parseDOM: [{ tag: 'a[href]', getAttrs: (dom: HTMLElement | string) => typeof dom === 'string' ? false : ({ href: dom.getAttribute('href'), title: dom.getAttribute('title') }) }], toDOM: node => ['a', { href: node.attrs.href, title: node.attrs.title, rel: 'noopener noreferrer' }, 0] },
 };
 export const schema = new Schema({ nodes, marks });
