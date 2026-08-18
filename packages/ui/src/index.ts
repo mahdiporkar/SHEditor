@@ -90,6 +90,55 @@ export function createEditorUI(
   surface.className = "she-surface";
   host.append(toolbar, surface);
   const editor = createEditor({ ...options, element: surface });
+  let imageLayoutMenu: HTMLElement | null = null;
+  const closeImageLayoutMenu = () => {
+    imageLayoutMenu?.remove();
+    imageLayoutMenu = null;
+  };
+  const openImageLayoutMenu = () => {
+    closeImageLayoutMenu();
+    const selected = surface.querySelector<HTMLElement>(
+      ".she-image-node.ProseMirror-selectednode",
+    );
+    if (!selected) return;
+    const labels =
+      locale === "fa"
+        ? ["چیدمان تصویر", "مستقل", "تصویر چپ، متن راست", "تصویر راست، متن چپ"]
+        : [
+            "Image layout",
+            "In line with text",
+            "Image left, text right",
+            "Image right, text left",
+          ];
+    const menu = document.createElement("div");
+    imageLayoutMenu = menu;
+    menu.className = "she-image-layout-menu";
+    menu.classList.toggle("she-dark", host.classList.contains("she-dark"));
+    menu.dir = host.dir;
+    menu.setAttribute("role", "toolbar");
+    menu.setAttribute("aria-label", labels[0]!);
+    const current = selected.dataset.wrap ?? "none";
+    menu.innerHTML = `<strong>${labels[0]}</strong><div><button type="button" data-wrap="none" title="${labels[1]}" aria-pressed="${current === "none"}"><span class="she-wrap-icon she-wrap-icon--none">▰</span><small>${labels[1]}</small></button><button type="button" data-wrap="left" title="${labels[2]}" aria-pressed="${current === "left"}"><span class="she-wrap-icon she-wrap-icon--left">▧</span><small>${labels[2]}</small></button><button type="button" data-wrap="right" title="${labels[3]}" aria-pressed="${current === "right"}"><span class="she-wrap-icon she-wrap-icon--right">▨</span><small>${labels[3]}</small></button></div>`;
+    const rect = selected.getBoundingClientRect();
+    menu.style.top = `${Math.min(window.innerHeight - 92, rect.bottom + 10)}px`;
+    menu.style.left = `${Math.max(12, Math.min(rect.left + rect.width / 2 - 175, window.innerWidth - 362))}px`;
+    menu
+      .querySelectorAll<HTMLButtonElement>("[data-wrap]")
+      .forEach((button) => {
+        button.addEventListener("mousedown", (event) => event.preventDefault());
+        button.addEventListener("click", () => {
+          editor.commands.updateImage({
+            wrap: button.dataset.wrap as "none" | "left" | "right",
+          });
+          closeImageLayoutMenu();
+          editor.focus();
+        });
+      });
+    document.body.append(menu);
+  };
+  surface.addEventListener("click", () =>
+    window.setTimeout(openImageLayoutMenu, 0),
+  );
   const update = () =>
     toolbar
       .querySelectorAll<HTMLButtonElement>("button[data-active]")
@@ -392,7 +441,7 @@ export function createEditorUI(
   const openImageDialog = () => {
     const dialog = makeDialog(locale === "fa" ? "درج تصویر" : "Insert image");
     const body = dialog.querySelector<HTMLElement>(".she-dialog-body")!;
-    body.innerHTML = `<label>Source<select data-field="mode"><option value="url">Image URL</option><option value="base64">Embed as Base64</option><option value="upload" ${options.image?.upload ? "" : "disabled"}>Upload to server</option></select></label><label data-url>URL<input data-field="url" type="url" placeholder="https://example.com/image.jpg"></label><label data-file hidden>Image file<input data-field="file" type="file" accept="${(options.image?.acceptedTypes ?? ["image/png", "image/jpeg", "image/gif", "image/webp"]).join(",")}"></label><label>Alternative text<input data-field="alt" placeholder="Describe the image"></label><label>Alignment<select data-field="align"><option value="center">Center</option><option value="left">Left</option><option value="right">Right</option></select></label>`;
+    body.innerHTML = `<label>Source<select data-field="mode"><option value="url">Image URL</option><option value="base64">Embed as Base64</option><option value="upload" ${options.image?.upload ? "" : "disabled"}>Upload to server</option></select></label><label data-url>URL<input data-field="url" type="url" placeholder="https://example.com/image.jpg"></label><label data-file hidden>Image file<input data-field="file" type="file" accept="${(options.image?.acceptedTypes ?? ["image/png", "image/jpeg", "image/gif", "image/webp"]).join(",")}"></label><label>Alternative text<input data-field="alt" placeholder="Describe the image"></label><div class="she-grid-fields"><label>Alignment<select data-field="align"><option value="center">Center</option><option value="left">Left</option><option value="right">Right</option></select></label><label>Text wrapping<select data-field="wrap"><option value="none">No wrapping</option><option value="left">Image left</option><option value="right">Image right</option></select></label></div>`;
     const mode = body.querySelector<HTMLSelectElement>("[data-field=mode]")!;
     mode.addEventListener("change", () => {
       body.querySelector<HTMLElement>("[data-url]")!.hidden =
@@ -409,6 +458,8 @@ export function createEditorUI(
         body.querySelector<HTMLInputElement>("[data-field=alt]")!.value;
       const align = body.querySelector<HTMLSelectElement>("[data-field=align]")!
         .value as "left" | "center" | "right";
+      const wrap = body.querySelector<HTMLSelectElement>("[data-field=wrap]")!
+        .value as "none" | "left" | "right";
       try {
         if (mode.value === "url")
           editor.commands.insertImage({
@@ -416,6 +467,7 @@ export function createEditorUI(
               .value,
             alt,
             align,
+            wrap,
           });
         else {
           const file =
@@ -425,7 +477,7 @@ export function createEditorUI(
             await editor.insertImageFile(
               file,
               mode.value as "base64" | "upload",
-              { alt },
+              { alt, align, wrap },
             );
         }
       } finally {
@@ -464,6 +516,7 @@ export function createEditorUI(
     element: host,
     destroy: () => {
       off();
+      closeImageLayoutMenu();
       closeTableMenu();
       editor.destroy();
       host.replaceChildren();

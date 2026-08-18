@@ -121,6 +121,80 @@
   font-family: Inter, Vazirmatn, "Noto Sans Arabic", system-ui, sans-serif;
   animation: she-menu-in 0.14s ease-out;
 }
+.she-image-layout-menu {
+  --she-color-primary: #6750f2;
+  --she-color-bg: #fff;
+  --she-color-surface: #f6f7fb;
+  --she-color-text: #20222b;
+  --she-color-muted: #666b7a;
+  --she-color-border: #e4e6ef;
+  position: fixed;
+  z-index: 10001;
+  width: 350px;
+  padding: 9px;
+  color: var(--she-color-text);
+  background: var(--she-color-bg);
+  border: 1px solid var(--she-color-border);
+  border-radius: 14px;
+  box-shadow: 0 18px 55px rgba(25, 27, 45, 0.25);
+  font-family: Inter, Vazirmatn, "Noto Sans Arabic", system-ui, sans-serif;
+  animation: she-menu-in 0.14s ease-out;
+}
+.she-image-layout-menu.she-dark {
+  --she-color-bg: #171822;
+  --she-color-surface: #21232f;
+  --she-color-text: #f3f4f8;
+  --she-color-muted: #afb2c1;
+  --she-color-border: #343746;
+}
+.she-image-layout-menu > strong {
+  display: block;
+  padding: 4px 7px 8px;
+  font-size: 10px;
+  color: var(--she-color-muted);
+}
+.she-image-layout-menu > div {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 5px;
+}
+.she-image-layout-menu button {
+  min-height: 65px;
+  display: grid;
+  place-items: center;
+  gap: 4px;
+  padding: 7px 3px;
+  border: 1px solid transparent;
+  border-radius: 9px;
+  color: var(--she-color-text);
+  background: transparent;
+  cursor: pointer;
+}
+.she-image-layout-menu button:hover {
+  background: var(--she-color-surface);
+}
+.she-image-layout-menu button[aria-pressed="true"] {
+  border-color: var(--she-color-primary);
+  background: color-mix(
+    in srgb,
+    var(--she-color-primary) 10%,
+    var(--she-color-bg)
+  );
+}
+.she-wrap-icon {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 25px;
+  color: var(--she-color-primary);
+  font-size: 22px;
+}
+.she-image-layout-menu small {
+  font-size: 8px;
+  line-height: 1.25;
+  text-align: center;
+}
 .she-table-menu-head {
   display: flex;
   align-items: center;
@@ -392,4 +466,11 @@
   --she-color-text: #f3f4f8;
   --she-color-muted: #afb2c1;
   --she-color-border: #343746;
+}
+@media (max-width: 640px) {
+  .she-image-layout-menu {
+    inset: auto 10px 10px !important;
+    width: auto;
+    animation: she-sheet-in 0.18s ease-out;
+  }
 }

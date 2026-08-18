@@ -30,13 +30,14 @@ npm install @sheditor/core @sheditor/ui
 ```
 
 ```ts
-import { createEditorUI } from '@sheditor/ui';
-import '@sheditor/ui/style.css';
-import '@sheditor/ui/content.css';
+import { createEditorUI } from "@sheditor/ui";
+import "@sheditor/ui/style.css";
+import "@sheditor/ui/content.css";
 
-const ui = createEditorUI(document.querySelector('#editor')!, {
-  content: '<p>سلام SHEditor</p>',
-  locale: 'fa', direction: 'rtl',
+const ui = createEditorUI(document.querySelector("#editor")!, {
+  content: "<p>سلام SHEditor</p>",
+  locale: "fa",
+  direction: "rtl",
   onUpdate: ({ editor }) => console.log(editor.getHTML()),
 });
 ```
@@ -50,8 +51,8 @@ const ui = createEditorUI(document.querySelector('#editor')!, {
 </div>
 
 ```tsx
-const [value, setValue] = useState('<p>سلام</p>');
-<SHEditor value={value} onChange={setValue} />
+const [value, setValue] = useState("<p>سلام</p>");
+<SHEditor value={value} onChange={setValue} />;
 ```
 
 <div dir="rtl">
@@ -64,9 +65,9 @@ const [value, setValue] = useState('<p>سلام</p>');
 
 ```vue
 <script setup lang="ts">
-import { ref } from 'vue';
-import { SHEditor } from '@sheditor/vue';
-const content = ref('<p>سلام</p>');
+import { ref } from "vue";
+import { SHEditor } from "@sheditor/vue";
+const content = ref("<p>سلام</p>");
 </script>
 <template><SHEditor v-model="content" locale="fa" /></template>
 ```
@@ -86,7 +87,7 @@ const content = ref('<p>سلام</p>');
   template: `<she-editor [formControl]="content" />`,
 })
 export class EditorPage {
-  content = new FormControl('<p>سلام</p>');
+  content = new FormControl("<p>سلام</p>");
 }
 ```
 
@@ -109,8 +110,16 @@ export class EditorPage {
 </div>
 
 ```ts
-createEditor({ locale: 'fa', direction: 'rtl', content: '<p>نسخه SHEditor برای React آماده است.</p>' });
-createEditor({ locale: 'ar', direction: 'rtl', content: '<p>محرر عربي و English.</p>' });
+createEditor({
+  locale: "fa",
+  direction: "rtl",
+  content: "<p>نسخه SHEditor برای React آماده است.</p>",
+});
+createEditor({
+  locale: "ar",
+  direction: "rtl",
+  content: "<p>محرر عربي و English.</p>",
+});
 ```
 
 <div dir="rtl">
@@ -123,7 +132,7 @@ createEditor({ locale: 'ar', direction: 'rtl', content: '<p>محرر عربي و
 
 ## تصویر و Upload Adapter
 
-تصویر از URL، Base64 و upload adapter سرور پشتیبانی می‌کند. drag/drop، paste، resize، alt/title و alignment نیز پیاده شده‌اند. قرارداد و نمونه کامل adapter در [راهنمای تصویر و جدول](docs/IMAGES_AND_TABLES.md) آمده است. caption و responsive sources هنوز برنامه آینده‌اند.
+تصویر از URL، Base64 و upload adapter سرور پشتیبانی می‌کند. drag/drop، paste، resize، alt/title، alignment و چیدمان Word-like متن در سمت چپ یا راست تصویر نیز پیاده شده‌اند. قرارداد و نمونه کامل adapter در [راهنمای تصویر و جدول](docs/IMAGES_AND_TABLES.md) آمده است. caption و responsive sources هنوز برنامه آینده‌اند.
 
 ## جدول
 
@@ -143,7 +152,7 @@ createEditor({ locale: 'ar', direction: 'rtl', content: '<p>محرر عربي و
 
 ```ts
 export const telemetry = defineExtension({
-  name: 'telemetry',
+  name: "telemetry",
   plugins: () => [new Plugin({})],
 });
 ```

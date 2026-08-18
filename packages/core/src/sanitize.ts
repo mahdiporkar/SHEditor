@@ -39,7 +39,7 @@ const SAFE_TAGS = [
 ];
 const SAFE_ATTRS: Record<string, string[]> = {
   A: ["href", "title", "target", "rel"],
-  IMG: ["src", "alt", "title", "width", "data-align", "class"],
+  IMG: ["src", "alt", "title", "width", "data-align", "data-wrap", "class"],
   TABLE: ["class"],
   TH: ["colspan", "rowspan", "colwidth", "style"],
   TD: ["colspan", "rowspan", "colwidth", "style"],

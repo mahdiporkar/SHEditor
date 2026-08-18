@@ -28,6 +28,8 @@ const ui = createEditorUI(element, {
 
 Use `editor.commands.insertImage({ src, alt, title, width, align })` for URLs and `await editor.insertImageFile(file, 'base64' | 'upload', { alt, title })` for files. HTTP(S), root-relative, and supported image data URLs are accepted. Script URLs and non-image data URLs are rejected. Width and alignment persist in HTML and JSON. Selecting an image exposes four resize handles in the default UI; resize is clamped between 80 and 1600 pixels.
 
+Images also support Word-like text wrapping through `wrap: 'none' | 'left' | 'right'`. Selecting an image opens a contextual layout toolbar for switching between an independent image block, image-left/text-right, and image-right/text-left. The wrap value persists as `data-wrap` in HTML and in JSON, so saved documents retain their layout after reload.
+
 Dropped and pasted image files choose `upload` when an adapter exists, otherwise Base64. Default limits are 10 MiB and PNG/JPEG/GIF/WebP. Set `allowBase64: false` when embedded document data is not acceptable.
 
 ## Table commands

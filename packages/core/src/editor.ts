@@ -83,6 +83,7 @@ class ImageNodeView implements NodeView {
       ? `${String(this.node.attrs.width)}px`
       : "auto";
     this.dom.dataset.align = String(this.node.attrs.align ?? "center");
+    this.dom.dataset.wrap = String(this.node.attrs.wrap ?? "none");
   }
   private resize(event: MouseEvent) {
     event.preventDefault();
@@ -445,6 +446,7 @@ export class SHEditor implements SHEditorAPI {
                   title: attrs.title ?? null,
                   width: attrs.width ?? null,
                   align: attrs.align ?? "center",
+                  wrap: attrs.wrap ?? "none",
                 }),
               )
               .scrollIntoView(),
@@ -524,7 +526,12 @@ export class SHEditor implements SHEditorAPI {
     mode: "base64" | "upload" = this.options.image?.upload
       ? "upload"
       : "base64",
-    attrs: { alt?: string; title?: string } = {},
+    attrs: {
+      alt?: string;
+      title?: string;
+      align?: "left" | "center" | "right";
+      wrap?: "none" | "left" | "right";
+    } = {},
   ): Promise<boolean> {
     const accepted = this.options.image?.acceptedTypes ?? [
       "image/png",
@@ -566,6 +573,8 @@ export class SHEditor implements SHEditorAPI {
       src,
       alt: attrs.alt ?? file.name,
       ...(attrs.title ? { title: attrs.title } : {}),
+      ...(attrs.align ? { align: attrs.align } : {}),
+      ...(attrs.wrap ? { wrap: attrs.wrap } : {}),
     });
   }
   getHTML(): string {

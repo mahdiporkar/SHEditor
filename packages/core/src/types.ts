@@ -6,6 +6,7 @@ export type Locale = "en" | "fa" | "ar";
 export type Direction = "ltr" | "rtl" | "auto";
 export type Content = string | Record<string, unknown>;
 export type ImageInsertMode = "url" | "base64" | "upload";
+export type ImageWrap = "none" | "left" | "right";
 export interface ImageUploadContext {
   editor: SHEditorAPI;
   signal: AbortSignal;
@@ -102,12 +103,14 @@ export interface EditorCommands {
     title?: string;
     width?: number;
     align?: "left" | "center" | "right";
+    wrap?: ImageWrap;
   }): boolean;
   updateImage(attrs: {
     alt?: string;
     title?: string;
     width?: number;
     align?: "left" | "center" | "right";
+    wrap?: ImageWrap;
   }): boolean;
   insertTable(rows?: number, cols?: number, withHeaderRow?: boolean): boolean;
   addRowBefore(): boolean;
@@ -142,7 +145,12 @@ export interface SHEditorAPI {
   insertImageFile(
     file: File,
     mode?: Exclude<ImageInsertMode, "url">,
-    attrs?: { alt?: string; title?: string },
+    attrs?: {
+      alt?: string;
+      title?: string;
+      align?: "left" | "center" | "right";
+      wrap?: ImageWrap;
+    },
   ): Promise<boolean>;
   on(
     event: "update" | "focus" | "blur",

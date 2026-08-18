@@ -103,6 +103,18 @@
 .she-image-node[data-align="right"] {
   margin-inline: auto 0;
 }
+.she-image-node[data-wrap="left"] {
+  float: left;
+  display: block;
+  margin: 0 1.25em 0.8em 0;
+  max-width: min(55%, 720px);
+}
+.she-image-node[data-wrap="right"] {
+  float: right;
+  display: block;
+  margin: 0 0 0.8em 1.25em;
+  max-width: min(55%, 720px);
+}
 .she-image-node img {
   display: block;
   max-width: 100%;
@@ -152,4 +164,19 @@
 }
 .she-prosemirror > img.she-image--right {
   margin-inline: auto 0;
+}
+.she-prosemirror > img.she-image--wrap-left {
+  float: left;
+  margin: 0 1.25em 0.8em 0;
+  max-width: min(55%, 720px);
+}
+.she-prosemirror > img.she-image--wrap-right {
+  float: right;
+  margin: 0 0 0.8em 1.25em;
+  max-width: min(55%, 720px);
+}
+.she-content .she-prosemirror:after {
+  content: "";
+  display: block;
+  clear: both;
 }

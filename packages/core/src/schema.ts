@@ -85,6 +85,7 @@ const baseNodes: Record<string, NodeSpec> = {
       title: { default: null },
       width: { default: null },
       align: { default: "center" },
+      wrap: { default: "none" },
     },
     parseDOM: [
       {
@@ -99,6 +100,7 @@ const baseNodes: Record<string, NodeSpec> = {
               ? Number(el.getAttribute("width"))
               : null,
             align: el.dataset.align ?? "center",
+            wrap: el.dataset.wrap ?? "none",
           };
         },
       },
@@ -111,7 +113,8 @@ const baseNodes: Record<string, NodeSpec> = {
         title: node.attrs.title,
         width: node.attrs.width,
         "data-align": node.attrs.align,
-        class: `she-image she-image--${String(node.attrs.align)}`,
+        "data-wrap": node.attrs.wrap,
+        class: `she-image she-image--${String(node.attrs.align)} she-image--wrap-${String(node.attrs.wrap)}`,
       },
     ],
   },

@@ -88,12 +88,23 @@ describe("SHEditor core", () => {
   });
   it("inserts and round-trips safe images with persistent size", () => {
     const editor = createEditor({ content: "<p>before</p>" });
-    expect(editor.commands.insertImage({ src: "https://example.com/photo.jpg", alt: "Photo", width: 420, align: "right" })).toBe(true);
+    expect(
+      editor.commands.insertImage({
+        src: "https://example.com/photo.jpg",
+        alt: "Photo",
+        width: 420,
+        align: "right",
+        wrap: "left",
+      }),
+    ).toBe(true);
     const html = editor.getHTML();
     expect(html).toContain('width="420"');
     expect(html).toContain('data-align="right"');
+    expect(html).toContain('data-wrap="left"');
     expect(createEditor({ content: html }).getHTML()).toBe(html);
-    expect(() => editor.commands.insertImage({ src: "javascript:alert(1)" })).toThrow("unsafe image URL");
+    expect(() =>
+      editor.commands.insertImage({ src: "javascript:alert(1)" }),
+    ).toThrow("unsafe image URL");
   });
   it("creates and round-trips semantic tables", () => {
     const editor = createEditor();
