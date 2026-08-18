@@ -1,0 +1,1 @@
+{"name":"@sheditor/ui","version":"0.1.0","type":"module","license":"MIT","exports":{".":{"types":"./dist/index.d.ts","import":"./dist/index.js"},"./style.css":"./src/style.css","./content.css":"./src/content.css"},"files":["dist","src/*.css"],"sideEffects":["*.css"]}

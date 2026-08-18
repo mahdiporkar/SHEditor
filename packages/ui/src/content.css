@@ -1,0 +1,6 @@
+.she-content .she-prosemirror{min-height:300px;padding:32px 36px;outline:none;line-height:1.8;color:var(--she-color-text)}
+.she-content .she-prosemirror p{margin:.65em 0}.she-content .she-prosemirror h1{font-size:2em}.she-content .she-prosemirror h2{font-size:1.55em}.she-content .she-prosemirror h3{font-size:1.25em}
+.she-content .she-prosemirror blockquote{margin:1em 0;padding:.3em 1em;border-inline-start:4px solid var(--she-color-primary);color:var(--she-color-muted);background:var(--she-color-surface);border-radius:6px}
+.she-content .she-prosemirror code{background:var(--she-color-surface);padding:.15em .35em;border-radius:5px}.she-content .she-prosemirror pre{background:#171822;color:#f6f6f8;padding:16px;border-radius:10px;overflow:auto}
+.she-content .she-prosemirror:empty:before{content:attr(data-placeholder);color:var(--she-color-muted);pointer-events:none;position:absolute}.she-content[dir=rtl]{text-align:right}
+@media(max-width:640px){.she-content .she-prosemirror{padding:22px 18px;min-height:260px}}

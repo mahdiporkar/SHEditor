@@ -1,0 +1,1 @@
+{"name":"@sheditor/angular","version":"0.1.0","type":"module","license":"MIT","exports":{".":{"types":"./dist/index.d.ts","import":"./dist/index.js"}},"peerDependencies":{"@angular/core":">=18","@angular/forms":">=18"},"dependencies":{"@sheditor/core":"0.1.0","@sheditor/ui":"0.1.0"}}
