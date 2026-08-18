@@ -6,3 +6,9 @@ coverage/
 *.tgz
 .tmp-*/
 .chrome-headless/
+.chrome-test-*/
+.chrome-verify-*/
+.edge-verify-*/
+.edge-*/
+docs/assets/sheditor-mobile-rtl*.png
+docs/assets/*-final.png

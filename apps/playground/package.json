@@ -1,1 +1,1 @@
-{"name":"@sheditor/playground","version":"0.1.0","private":true,"type":"module"}
+{"name":"@sheditor/playground","version":"0.1.0","private":true,"type":"module","dependencies":{"@sheditor/core":"0.1.0","@sheditor/ui":"0.1.0"}}

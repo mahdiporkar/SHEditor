@@ -2,9 +2,17 @@
 
 > A free, MIT-licensed, TypeScript-first rich-text editor with Persian, English, and Arabic support.
 
-![SHEditor playground](docs/assets/sheditor-playground.png)
+[Live Demo](https://mahdiporkar.github.io/SHEditor/) · [Documentation](docs/ARCHITECTURE.md) · [Packages](packages/) · [GitHub](https://github.com/mahdiporkar/SHEditor)
+
+The Live Demo URL becomes available after the first successful **Deploy SHEditor Demo** workflow. See [GitHub Pages setup](docs/GITHUB_PAGES.md).
+
+![SHEditor live playground](docs/assets/sheditor-live-demo.png)
 
 [فارسی](#فارسی) · [English](#english) · [العربية](#العربية)
+
+## Live Demo
+
+Try the real workspace packages directly in your browser. The playground includes the full stable editor, Persian RTL editing, live HTML/JSON/text output, React/Vue/Angular examples, a real custom extension, readonly mode, responsive navigation, and persistent light/dark themes. Images and tables are clearly marked as upcoming milestones until their complete production features ship.
 
 ## فارسی
 
