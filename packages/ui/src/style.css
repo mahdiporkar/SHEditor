@@ -80,6 +80,59 @@
 .she-select {
   min-width: 120px;
 }
+.she-font-control {
+  display: flex;
+  align-items: center;
+  height: 36px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+}
+.she-font-control:focus-within {
+  border-color: color-mix(in srgb, var(--she-color-primary) 40%, transparent);
+}
+.she-font-select {
+  min-width: 128px;
+  max-width: 180px;
+  border-radius: 8px 0 0 8px;
+}
+.she-font-upload {
+  display: grid;
+  place-items: center;
+  width: 30px;
+  height: 28px;
+  margin-inline-end: 3px;
+  padding: 0;
+  border: 0;
+  border-inline-start: 1px solid var(--she-color-border);
+  border-radius: 0 7px 7px 0;
+  color: var(--she-color-primary);
+  background: transparent;
+  cursor: pointer;
+  font-size: 17px;
+  font-weight: 700;
+}
+.she-font-upload:hover {
+  background: color-mix(in srgb, var(--she-color-primary) 10%, transparent);
+}
+.she-font-upload.is-loading span {
+  animation: she-font-spin 0.7s linear infinite;
+}
+.she-font-upload:disabled {
+  opacity: 0.55;
+  cursor: wait;
+}
+@keyframes she-font-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+[dir="rtl"] .she-font-select {
+  border-radius: 0 8px 8px 0;
+}
+[dir="rtl"] .she-font-upload {
+  border-radius: 7px 0 0 7px;
+  border-inline-start: 1px solid var(--she-color-border);
+}
 .she-surface {
   background: var(--she-color-bg);
 }

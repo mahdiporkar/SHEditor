@@ -3,9 +3,11 @@ import type {
   Direction,
   Extension,
   FileAsset,
+  FontAsset,
   ImageOptions,
   Locale,
   SHEditorAPI,
+  TypographyOptions,
 } from "@sheditor/core";
 import "../../../packages/ui/src/style.css";
 import "../../../packages/ui/src/content.css";
@@ -47,6 +49,38 @@ const routes: Array<{ id: Route; label: string }> = [
   { id: "readonly", label: "Readonly" },
 ];
 const app = document.querySelector<HTMLElement>("#app")!;
+const demoFontAssets: FontAsset[] = [];
+const demoTypography: TypographyOptions = {
+  fontFamilies: ["Arial", "Georgia", "Tahoma", "Times New Roman"],
+  fontManager: {
+    list: async () => demoFontAssets,
+    upload: async (file) => {
+      const extension = file.name.split(".").pop()?.toLowerCase();
+      const family =
+        file.name
+          .replace(/\.[^.]+$/, "")
+          .replace(/[^\w\s-]/g, "")
+          .trim() || `Custom Font ${demoFontAssets.length + 1}`;
+      const font: FontAsset = {
+        id: `font-${Date.now()}`,
+        name: file.name,
+        family,
+        url: URL.createObjectURL(file),
+        ...(extension === "woff2" || extension === "woff"
+          ? { format: extension }
+          : extension === "ttf"
+            ? { format: "truetype" }
+            : extension === "otf"
+              ? { format: "opentype" }
+              : {}),
+      };
+      demoFontAssets.push(font);
+      return font;
+    },
+  },
+  onFontError: (error) =>
+    showToast(error instanceof Error ? error.message : "Font upload failed"),
+};
 let activeUI: EditorUI | null = null;
 let theme =
   localStorage.getItem("she-demo-theme") ??
@@ -96,6 +130,7 @@ function mountEditor(
     editable?: boolean;
     extensions?: Extension[];
     image?: ImageOptions;
+    typography?: TypographyOptions;
     onUpdate?: (editor: SHEditorAPI) => void;
   } = {},
 ): EditorUI {
@@ -129,6 +164,7 @@ function mountEditor(
     editable: options.editable ?? true,
     ...(options.extensions ? { extensions: options.extensions } : {}),
     ...(options.image ? { image: options.image } : {}),
+    typography: options.typography ?? demoTypography,
     placeholder: "Start writing…",
     onUpdate: ({ editor }) => update(editor),
   });

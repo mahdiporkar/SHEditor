@@ -72,6 +72,26 @@ describe("SHEditor core", () => {
     expect(() => editor.commands.setTextColor("#000000")).toThrow("allowlist");
     editor.destroy();
   });
+  it("registers a CMS font family and applies it safely", () => {
+    const element = document.createElement("div");
+    const editor = createEditor({
+      element,
+      content: "<p>Custom font</p>",
+      typography: { fontFamilies: ["Arial"] },
+    });
+    editor.registerFontFamily("Brand Sans");
+    editor.view!.dispatch(
+      editor.state.tr.setSelection(
+        TextSelection.create(editor.state.doc, 1, 12),
+      ),
+    );
+    expect(editor.commands.setFontFamily("Brand Sans")).toBe(true);
+    expect(editor.getHTML()).toContain("Brand Sans");
+    expect(() => editor.registerFontFamily("Bad; url(x)")).toThrow(
+      "unsafe font family",
+    );
+    editor.destroy();
+  });
   it("aligns selected text blocks and serializes the property", () => {
     const element = document.createElement("div");
     const editor = createEditor({ element, content: "<p>One</p><p>Two</p>" });

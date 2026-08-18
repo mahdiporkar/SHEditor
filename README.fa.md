@@ -99,6 +99,8 @@ export class EditorPage {
 
 نوع `SHEditorOptions` شامل `content`، `editable`، `locale`، `direction`، `placeholder`، `extensions`، `sanitizer`، `typography` و callbackهای update/focus/blur است. allowlist تایپوگرافی fontها، اندازه‌ها و رنگ‌های مجاز را محدود می‌کند. Toolbar پیش‌فرض فقط commandهای فعال را نشان می‌دهد.
 
+Font Manager می‌تواند فونت‌های موجود CMS را دریافت کند یا فایل WOFF2/WOFF/TTF/OTF جدید را آپلود کند. فونت پس از بارگذاری به‌صورت خودکار به منوی فونت اضافه و روی متن انتخاب‌شده قابل اعمال است. نمونه کامل backend adapter و نکات CORS در [راهنمای فونت سفارشی](docs/CUSTOM_FONTS.md) آمده است.
+
 `editor.commands` قالب‌بندی، زیرنویس/بالانویس، رنگ، highlight، font، alignment، heading/paragraph، list، quote، link، HR، clear formatting و undo/redo را ارائه می‌کند. برای UI سفارشی `chain()`، `can()` و `isActive()` در دسترس‌اند.
 
 ## Eventها و API محتوا

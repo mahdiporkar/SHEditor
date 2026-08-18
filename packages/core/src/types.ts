@@ -64,9 +64,27 @@ export interface SHEditorOptions {
 }
 export interface TypographyOptions {
   fontFamilies?: string[];
+  fontManager?: FontManagerOptions;
+  acceptedFontTypes?: string[];
+  maxFontFileSize?: number;
+  onFontError?: (error: unknown) => void;
   fontSizes?: string[];
   colors?: string[];
   highlights?: string[];
+}
+export interface FontAsset {
+  id: string;
+  name: string;
+  family: string;
+  url: string;
+  format?: "woff2" | "woff" | "truetype" | "opentype";
+  weight?: string;
+  style?: "normal" | "italic" | "oblique";
+}
+export interface FontManagerOptions {
+  list: (context: { signal: AbortSignal }) => Promise<FontAsset[]>;
+  upload: (file: File, context: { signal: AbortSignal }) => Promise<FontAsset>;
+  delete?: (font: FontAsset, context: { signal: AbortSignal }) => Promise<void>;
 }
 export interface SanitizerOptions {
   allowedTags?: string[];
@@ -158,6 +176,7 @@ export interface SHEditorAPI {
   setContent(content: Content, emitUpdate?: boolean): void;
   setEditable(editable: boolean): void;
   setLocale(locale: Locale): void;
+  registerFontFamily(family: string): void;
   isActive(name: string, attrs?: Record<string, unknown>): boolean;
   can(command: keyof EditorCommands): boolean;
   chain(): Chain;

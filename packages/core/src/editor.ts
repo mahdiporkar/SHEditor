@@ -134,6 +134,7 @@ export class SHEditor implements SHEditorAPI {
   private currentState: EditorState;
   private options: SHEditorOptions;
   private editable: boolean;
+  private registeredFonts = new Set<string>();
   private listeners = new Map<EventName, Set<(...args: never[]) => void>>();
   readonly commands: EditorCommands;
 
@@ -384,7 +385,10 @@ export class SHEditor implements SHEditorAPI {
         setMark("font_family", {
           family: allowed(
             family,
-            this.options.typography?.fontFamilies,
+            [
+              ...(this.options.typography?.fontFamilies ?? []),
+              ...this.registeredFonts,
+            ],
             "font family",
             /^[\w\s,'"-]+$/,
           ),
@@ -616,6 +620,11 @@ export class SHEditor implements SHEditorAPI {
         ?.setAttribute("data-locale", locale);
       this.view.dom.setAttribute("dir", locale === "en" ? "ltr" : "rtl");
     }
+  }
+  registerFontFamily(family: string): void {
+    if (!/^[\w\s,'"-]+$/.test(family))
+      throw new SHEditorError("SHEditor: unsafe font family value.");
+    this.registeredFonts.add(family);
   }
   isActive(name: string, attrs: Record<string, unknown> = {}): boolean {
     const { from, to, empty } = this.state.selection;

@@ -2,6 +2,7 @@ import {
   createEditor,
   dictionaries,
   type FileAsset,
+  type FontAsset,
   type Locale,
   type SHEditor,
   type SHEditorOptions,
@@ -179,6 +180,131 @@ export function createEditorUI(
     editor.focus();
   });
   toolbar.insertBefore(select, toolbar.children[2] ?? null);
+  const fontControl = document.createElement("div");
+  fontControl.className = "she-font-control";
+  const fontSelect = document.createElement("select");
+  fontSelect.className = "she-select she-font-select";
+  fontSelect.setAttribute(
+    "aria-label",
+    locale === "fa" ? "انتخاب فونت" : "Font family",
+  );
+  const defaultFonts = options.typography?.fontFamilies ?? [
+    "Arial",
+    "Georgia",
+    "Tahoma",
+    "Times New Roman",
+  ];
+  fontSelect.innerHTML = `<option value="">${locale === "fa" ? "فونت" : "Font"}</option>`;
+  for (const family of defaultFonts) {
+    const option = document.createElement("option");
+    option.value = family;
+    option.textContent = family;
+    option.style.fontFamily = family;
+    fontSelect.append(option);
+  }
+  fontSelect.addEventListener("change", () => {
+    if (fontSelect.value) editor.commands.setFontFamily(fontSelect.value);
+    editor.focus();
+  });
+  fontControl.append(fontSelect);
+  const installedFonts = new Map<string, FontAsset>();
+  const installFont = async (font: FontAsset) => {
+    if (installedFonts.has(font.id)) return;
+    editor.registerFontFamily(font.family);
+    if (typeof FontFace !== "undefined") {
+      if (!/^(?:https?:|blob:|data:)/i.test(font.url))
+        throw new Error("Unsupported font URL");
+      const source = `url(${JSON.stringify(font.url)})${font.format ? ` format(${JSON.stringify(font.format)})` : ""}`;
+      const face = new FontFace(font.family, source, {
+        weight: font.weight ?? "normal",
+        style: font.style ?? "normal",
+      });
+      await face.load();
+      document.fonts.add(face);
+    }
+    installedFonts.set(font.id, font);
+    const option = document.createElement("option");
+    option.value = font.family;
+    option.textContent = font.name;
+    option.style.fontFamily = font.family;
+    fontSelect.append(option);
+  };
+  let fontController: AbortController | null = null;
+  const fontManager = options.typography?.fontManager;
+  if (fontManager) {
+    const uploadButton = document.createElement("button");
+    uploadButton.type = "button";
+    uploadButton.className = "she-font-upload";
+    uploadButton.innerHTML = '<span aria-hidden="true">＋</span>';
+    uploadButton.title = locale === "fa" ? "آپلود فونت" : "Upload font";
+    uploadButton.setAttribute("aria-label", uploadButton.title);
+    const input = document.createElement("input");
+    input.type = "file";
+    input.hidden = true;
+    input.accept = (
+      options.typography?.acceptedFontTypes ?? [
+        "font/woff2",
+        "font/woff",
+        "font/ttf",
+        "font/otf",
+        "application/font-woff",
+      ]
+    ).join(",");
+    uploadButton.addEventListener("click", () => input.click());
+    input.addEventListener("change", async () => {
+      const file = input.files?.[0];
+      if (!file) return;
+      const accepted = options.typography?.acceptedFontTypes ?? [
+        "font/woff2",
+        "font/woff",
+        "font/ttf",
+        "font/otf",
+        "application/font-woff",
+      ];
+      const extension = file.name.split(".").pop()?.toLowerCase();
+      if (
+        !accepted.includes(file.type) &&
+        !["woff2", "woff", "ttf", "otf"].includes(extension ?? "")
+      ) {
+        options.typography?.onFontError?.(
+          new Error("Unsupported font file type"),
+        );
+        input.value = "";
+        return;
+      }
+      const max = options.typography?.maxFontFileSize ?? 5 * 1024 * 1024;
+      if (file.size > max) {
+        options.typography?.onFontError?.(
+          new Error("Font file exceeds the configured size limit"),
+        );
+        return;
+      }
+      uploadButton.disabled = true;
+      uploadButton.classList.add("is-loading");
+      try {
+        const font = await fontManager.upload(file, {
+          signal: new AbortController().signal,
+        });
+        await installFont(font);
+        fontSelect.value = font.family;
+        editor.commands.setFontFamily(font.family);
+        editor.focus();
+      } catch (error) {
+        options.typography?.onFontError?.(error);
+      } finally {
+        uploadButton.disabled = false;
+        uploadButton.classList.remove("is-loading");
+        input.value = "";
+      }
+    });
+    fontControl.append(uploadButton, input);
+    fontController = new AbortController();
+    void fontManager
+      .list({ signal: fontController.signal })
+      .then((fonts) => Promise.all(fonts.map(installFont)))
+      .catch((error) => options.typography?.onFontError?.(error));
+  }
+  toolbar.insertBefore(fontControl, select.nextSibling);
   const alignment = document.createElement("select");
   alignment.className = "she-select she-align";
   alignment.setAttribute("aria-label", t("alignment"));
@@ -696,6 +822,7 @@ export function createEditorUI(
     element: host,
     destroy: () => {
       off();
+      fontController?.abort();
       closeImageLayoutMenu();
       closeTableMenu();
       editor.destroy();
