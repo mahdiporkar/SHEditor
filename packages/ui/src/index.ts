@@ -1,6 +1,7 @@
 import {
   createEditor,
   dictionaries,
+  type FileAsset,
   type Locale,
   type SHEditor,
   type SHEditorOptions,
@@ -438,17 +439,195 @@ export function createEditorUI(
     host.append(dialog);
     return dialog;
   };
+  const openFileManager = (onSelect: (asset: FileAsset) => void) => {
+    const manager = options.image?.fileManager;
+    if (!manager) return;
+    const dialog = document.createElement("dialog");
+    dialog.className = "she-dialog she-file-manager";
+    const copy =
+      locale === "fa"
+        ? {
+            title: "مدیریت فایل‌ها",
+            search: "جست‌وجوی تصویر…",
+            upload: "آپلود فایل",
+            empty: "فایلی پیدا نشد",
+            loading: "در حال دریافت فایل‌ها…",
+            insert: "انتخاب و درج",
+            remove: "حذف",
+            confirm: "این فایل از سرور حذف شود؟",
+            error: "دریافت فایل‌ها ناموفق بود",
+            close: "بستن",
+          }
+        : {
+            title: "File manager",
+            search: "Search images…",
+            upload: "Upload file",
+            empty: "No files found",
+            loading: "Loading files…",
+            insert: "Select and insert",
+            remove: "Delete",
+            confirm: "Delete this file from the server?",
+            error: "Could not load files",
+            close: "Close",
+          };
+    dialog.innerHTML = `<form method="dialog"><header><div class="she-file-manager-title"><span>▧</span><div><strong>${copy.title}</strong><small>Asset library</small></div></div><button value="cancel" aria-label="${copy.close}">×</button></header><div class="she-file-manager-bar"><label><span>⌕</span><input type="search" data-search placeholder="${copy.search}"></label>${options.image?.upload ? `<button type="button" data-upload>↑ ${copy.upload}</button><input type="file" data-file hidden accept="${(options.image.acceptedTypes ?? ["image/png", "image/jpeg", "image/gif", "image/webp"]).join(",")}">` : ""}</div><div class="she-file-manager-status" data-status>${copy.loading}</div><div class="she-file-grid" data-grid></div><footer><span data-selection></span><button value="cancel" class="she-dialog-cancel">${copy.close}</button><button type="button" class="she-dialog-submit" data-insert disabled>${copy.insert}</button></footer></form>`;
+    host.append(dialog);
+    const grid = dialog.querySelector<HTMLElement>("[data-grid]")!;
+    const status = dialog.querySelector<HTMLElement>("[data-status]")!;
+    const insert = dialog.querySelector<HTMLButtonElement>("[data-insert]")!;
+    const selection = dialog.querySelector<HTMLElement>("[data-selection]")!;
+    let selected: FileAsset | null = null;
+    let controller = new AbortController();
+    let timer = 0;
+    const choose = (asset: FileAsset, card: HTMLElement) => {
+      selected = asset;
+      grid
+        .querySelectorAll(".she-file-card")
+        .forEach((item) => item.classList.toggle("is-selected", item === card));
+      insert.disabled = false;
+      selection.textContent = asset.name;
+    };
+    const render = (assets: FileAsset[]) => {
+      grid.replaceChildren();
+      status.hidden = assets.length > 0;
+      if (!assets.length) status.textContent = copy.empty;
+      for (const asset of assets) {
+        const card = document.createElement("article");
+        card.className = "she-file-card";
+        card.tabIndex = 0;
+        const preview = document.createElement("div");
+        const image = document.createElement("img");
+        image.src = asset.thumbnailUrl ?? asset.url;
+        image.alt = "";
+        const check = document.createElement("span");
+        check.textContent = "✓";
+        preview.append(image, check);
+        const meta = document.createElement("footer");
+        const name = document.createElement("strong");
+        name.textContent = asset.name;
+        name.title = asset.name;
+        const detail = document.createElement("small");
+        detail.textContent = `${asset.width && asset.height ? `${asset.width}×${asset.height}` : ""}${asset.size ? ` · ${Math.ceil(asset.size / 1024)} KB` : ""}`;
+        meta.append(name, detail);
+        card.append(preview, meta);
+        if (manager.delete) {
+          const remove = document.createElement("button");
+          remove.type = "button";
+          remove.dataset.delete = "";
+          remove.title = copy.remove;
+          remove.setAttribute("aria-label", copy.remove);
+          remove.textContent = "⌫";
+          card.append(remove);
+        }
+        card.addEventListener("click", () => choose(asset, card));
+        card.addEventListener("keydown", (event) => {
+          if (event.key === "Enter" || event.key === " ") {
+            event.preventDefault();
+            choose(asset, card);
+          }
+        });
+        card
+          .querySelector("[data-delete]")
+          ?.addEventListener("click", async (event) => {
+            event.stopPropagation();
+            if (!confirm(copy.confirm)) return;
+            await manager.delete!(asset, {
+              signal: new AbortController().signal,
+            });
+            await load();
+          });
+        grid.append(card);
+      }
+    };
+    const load = async () => {
+      controller.abort();
+      controller = new AbortController();
+      status.hidden = false;
+      status.textContent = copy.loading;
+      grid.replaceChildren();
+      selected = null;
+      insert.disabled = true;
+      try {
+        const search = dialog
+          .querySelector<HTMLInputElement>("[data-search]")!
+          .value.trim();
+        render(
+          await manager.list({
+            ...(search ? { search } : {}),
+            signal: controller.signal,
+          }),
+        );
+      } catch (error) {
+        if (controller.signal.aborted) return;
+        status.hidden = false;
+        status.textContent = copy.error;
+        options.image?.onError?.(error);
+      }
+    };
+    dialog.querySelector("[data-search]")!.addEventListener("input", () => {
+      clearTimeout(timer);
+      timer = window.setTimeout(load, 250);
+    });
+    dialog
+      .querySelector("[data-upload]")
+      ?.addEventListener("click", () =>
+        dialog.querySelector<HTMLInputElement>("[data-file]")!.click(),
+      );
+    dialog
+      .querySelector<HTMLInputElement>("[data-file]")
+      ?.addEventListener("change", async (event) => {
+        const file = (event.currentTarget as HTMLInputElement).files?.[0];
+        if (!file || !options.image?.upload) return;
+        const result = await options.image.upload(file, {
+          editor,
+          signal: new AbortController().signal,
+        });
+        const url = typeof result === "string" ? result : result.url;
+        onSelect({
+          id: url,
+          url,
+          name: file.name,
+          mimeType: file.type,
+          size: file.size,
+        });
+        dialog.close();
+      });
+    insert.addEventListener("click", () => {
+      if (!selected) return;
+      onSelect(selected);
+      dialog.close();
+    });
+    dialog.addEventListener("close", () => {
+      controller.abort();
+      clearTimeout(timer);
+      dialog.remove();
+    });
+    dialog.showModal();
+    void load();
+  };
   const openImageDialog = () => {
     const dialog = makeDialog(locale === "fa" ? "درج تصویر" : "Insert image");
     const body = dialog.querySelector<HTMLElement>(".she-dialog-body")!;
-    body.innerHTML = `<label>Source<select data-field="mode"><option value="url">Image URL</option><option value="base64">Embed as Base64</option><option value="upload" ${options.image?.upload ? "" : "disabled"}>Upload to server</option></select></label><label data-url>URL<input data-field="url" type="url" placeholder="https://example.com/image.jpg"></label><label data-file hidden>Image file<input data-field="file" type="file" accept="${(options.image?.acceptedTypes ?? ["image/png", "image/jpeg", "image/gif", "image/webp"]).join(",")}"></label><label>Alternative text<input data-field="alt" placeholder="Describe the image"></label><div class="she-grid-fields"><label>Alignment<select data-field="align"><option value="center">Center</option><option value="left">Left</option><option value="right">Right</option></select></label><label>Text wrapping<select data-field="wrap"><option value="none">No wrapping</option><option value="left">Image left</option><option value="right">Image right</option></select></label></div>`;
+    body.innerHTML = `<label>Source<select data-field="mode"><option value="url">Image URL</option><option value="base64">Embed as Base64</option><option value="upload" ${options.image?.upload ? "" : "disabled"}>Upload to server</option>${options.image?.fileManager ? '<option value="library">File manager</option>' : ""}</select></label><label data-url>URL<input data-field="url" type="url" placeholder="https://example.com/image.jpg"></label><label data-file hidden>Image file<input data-field="file" type="file" accept="${(options.image?.acceptedTypes ?? ["image/png", "image/jpeg", "image/gif", "image/webp"]).join(",")}"></label><button type="button" class="she-library-trigger" data-library hidden>▧ <span>${locale === "fa" ? "بازکردن فایل‌منیجر" : "Browse file manager"}</span></button><label>Alternative text<input data-field="alt" placeholder="Describe the image"></label><div class="she-grid-fields"><label>Alignment<select data-field="align"><option value="center">Center</option><option value="left">Left</option><option value="right">Right</option></select></label><label>Text wrapping<select data-field="wrap"><option value="none">No wrapping</option><option value="left">Image left</option><option value="right">Image right</option></select></label></div>`;
     const mode = body.querySelector<HTMLSelectElement>("[data-field=mode]")!;
     mode.addEventListener("change", () => {
       body.querySelector<HTMLElement>("[data-url]")!.hidden =
         mode.value !== "url";
       body.querySelector<HTMLElement>("[data-file]")!.hidden =
-        mode.value === "url";
+        mode.value === "url" || mode.value === "library";
+      body.querySelector<HTMLElement>("[data-library]")!.hidden =
+        mode.value !== "library";
     });
+    body.querySelector("[data-library]")?.addEventListener("click", () =>
+      openFileManager((asset) => {
+        body.querySelector<HTMLInputElement>("[data-field=url]")!.value =
+          asset.url;
+        body.querySelector<HTMLInputElement>("[data-field=alt]")!.value =
+          asset.name;
+        mode.value = "url";
+        mode.dispatchEvent(new Event("change"));
+      }),
+    );
     dialog.addEventListener("close", async () => {
       if (dialog.returnValue !== "default") {
         dialog.remove();

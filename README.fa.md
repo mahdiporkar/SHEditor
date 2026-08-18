@@ -132,7 +132,7 @@ createEditor({
 
 ## تصویر و Upload Adapter
 
-تصویر از URL، Base64 و upload adapter سرور پشتیبانی می‌کند. drag/drop، paste، resize، alt/title، alignment و چیدمان Word-like متن در سمت چپ یا راست تصویر نیز پیاده شده‌اند. قرارداد و نمونه کامل adapter در [راهنمای تصویر و جدول](docs/IMAGES_AND_TABLES.md) آمده است. caption و responsive sources هنوز برنامه آینده‌اند.
+تصویر از URL، Base64 و upload adapter سرور پشتیبانی می‌کند. فایل‌منیجر دارای کتابخانه سرور، جست‌وجو، آپلود، انتخاب، metadata و حذف اختیاری است. drag/drop، paste، resize، alt/title، alignment و چیدمان Word-like متن در سمت چپ یا راست تصویر نیز پیاده شده‌اند. قرارداد و نمونه کامل adapter در [راهنمای تصویر و جدول](docs/IMAGES_AND_TABLES.md) آمده است. caption و responsive sources هنوز برنامه آینده‌اند.
 
 ## جدول
 

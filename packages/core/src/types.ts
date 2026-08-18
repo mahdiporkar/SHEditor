@@ -11,6 +11,27 @@ export interface ImageUploadContext {
   editor: SHEditorAPI;
   signal: AbortSignal;
 }
+export interface FileAsset {
+  id: string;
+  url: string;
+  name: string;
+  thumbnailUrl?: string;
+  mimeType?: string;
+  size?: number;
+  width?: number;
+  height?: number;
+  createdAt?: string;
+}
+export interface FileManagerOptions {
+  list: (query: {
+    search?: string;
+    signal: AbortSignal;
+  }) => Promise<FileAsset[]>;
+  delete?: (
+    asset: FileAsset,
+    context: { signal: AbortSignal },
+  ) => Promise<void>;
+}
 export interface ImageOptions {
   upload?: (
     file: File,
@@ -20,6 +41,7 @@ export interface ImageOptions {
   acceptedTypes?: string[];
   allowBase64?: boolean;
   onError?: (error: unknown) => void;
+  fileManager?: FileManagerOptions;
 }
 export interface EditorUpdate {
   editor: SHEditorAPI;

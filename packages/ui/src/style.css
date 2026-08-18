@@ -195,6 +195,204 @@
   line-height: 1.25;
   text-align: center;
 }
+.she-library-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 46px;
+  border: 1px dashed var(--she-color-primary);
+  border-radius: 10px;
+  color: var(--she-color-primary);
+  background: color-mix(
+    in srgb,
+    var(--she-color-primary) 7%,
+    var(--she-color-bg)
+  );
+  cursor: pointer;
+  font-weight: 700;
+}
+.she-file-manager {
+  width: min(920px, calc(100vw - 28px));
+  height: min(720px, calc(100vh - 28px));
+  max-width: none;
+}
+.she-file-manager form {
+  height: 100%;
+  display: grid;
+  grid-template-rows: auto auto 1fr auto;
+  overflow: hidden;
+}
+.she-file-manager-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.she-file-manager-title > span {
+  display: grid;
+  place-items: center;
+  width: 35px;
+  height: 35px;
+  border-radius: 9px;
+  color: #fff;
+  background: var(--she-color-primary);
+  font-size: 20px;
+}
+.she-file-manager-title > div {
+  display: grid;
+  gap: 2px;
+}
+.she-file-manager-title small {
+  font-size: 9px;
+  color: var(--she-color-muted);
+}
+.she-file-manager-bar {
+  display: flex;
+  gap: 9px;
+  padding: 12px 16px;
+  background: var(--she-color-surface);
+  border-bottom: 1px solid var(--she-color-border);
+}
+.she-file-manager-bar label {
+  position: relative;
+  display: block;
+  flex: 1;
+}
+.she-file-manager-bar label span {
+  position: absolute;
+  inset-inline-start: 12px;
+  top: 8px;
+  color: var(--she-color-muted);
+  font-size: 19px;
+}
+.she-file-manager-bar input {
+  height: 38px;
+  padding-inline-start: 38px;
+}
+.she-file-manager-bar button {
+  height: 38px;
+  padding: 0 15px;
+  border: 0;
+  border-radius: 8px;
+  color: #fff;
+  background: var(--she-color-primary);
+  cursor: pointer;
+  font-weight: 700;
+}
+.she-file-manager-status {
+  grid-row: 3;
+  place-self: center;
+  color: var(--she-color-muted);
+  font-size: 12px;
+}
+.she-file-grid {
+  grid-row: 3;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  align-content: start;
+  gap: 10px;
+  padding: 16px;
+  overflow: auto;
+}
+.she-file-grid:empty {
+  display: none;
+}
+.she-file-card {
+  position: relative;
+  min-width: 0;
+  border: 2px solid transparent;
+  border-radius: 11px;
+  background: var(--she-color-surface);
+  overflow: hidden;
+  cursor: pointer;
+  outline: none;
+}
+.she-file-card:hover,
+.she-file-card:focus-visible {
+  border-color: var(--she-color-border);
+  transform: translateY(-1px);
+}
+.she-file-card.is-selected {
+  border-color: var(--she-color-primary);
+  box-shadow: 0 0 0 2px
+    color-mix(in srgb, var(--she-color-primary) 16%, transparent);
+}
+.she-file-card > div {
+  position: relative;
+  aspect-ratio: 4/3;
+  background: repeating-conic-gradient(#eee 0 25%, #fff 0 50%) 50%/14px 14px;
+  overflow: hidden;
+}
+.she-dark .she-file-card > div {
+  background: repeating-conic-gradient(#292b37 0 25%, #21232f 0 50%) 50%/14px
+    14px;
+}
+.she-file-card img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+.she-file-card > div span {
+  position: absolute;
+  inset: 7px 7px auto auto;
+  display: none;
+  width: 23px;
+  height: 23px;
+  place-items: center;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--she-color-primary);
+  font-size: 12px;
+}
+.she-file-card.is-selected > div span {
+  display: grid;
+}
+.she-file-card footer {
+  display: grid;
+  gap: 3px;
+  padding: 9px;
+}
+.she-file-card footer strong {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 10px;
+}
+.she-file-card footer small {
+  min-height: 12px;
+  color: var(--she-color-muted);
+  font-size: 8px;
+}
+.she-file-card > [data-delete] {
+  position: absolute;
+  inset: 5px 5px auto auto;
+  display: none;
+  width: 27px;
+  height: 27px;
+  border: 0;
+  border-radius: 7px;
+  color: #c73545;
+  background: var(--she-color-bg);
+  box-shadow: 0 3px 12px #0002;
+  cursor: pointer;
+}
+.she-file-card:hover > [data-delete],
+.she-file-card:focus-within > [data-delete] {
+  display: block;
+}
+.she-file-card.is-selected > [data-delete] {
+  inset-inline-end: 36px;
+}
+.she-file-manager > form > footer > span {
+  margin-inline-end: auto;
+  max-width: 45%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--she-color-muted);
+  font-size: 10px;
+}
 .she-table-menu-head {
   display: flex;
   align-items: center;
@@ -472,5 +670,28 @@
     inset: auto 10px 10px !important;
     width: auto;
     animation: she-sheet-in 0.18s ease-out;
+  }
+  .she-file-manager {
+    width: 100vw;
+    height: 100dvh;
+    max-height: none;
+    border-radius: 0;
+  }
+  .she-file-manager-bar {
+    padding: 10px;
+    flex-wrap: wrap;
+  }
+  .she-file-manager-bar label {
+    flex-basis: 100%;
+  }
+  .she-file-manager-bar button {
+    width: 100%;
+  }
+  .she-file-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 10px;
+  }
+  .she-file-manager > form > footer > span {
+    display: none;
   }
 }

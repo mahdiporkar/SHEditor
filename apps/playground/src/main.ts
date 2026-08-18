@@ -2,6 +2,7 @@ import { createEditorUI, type EditorUI } from "@sheditor/ui";
 import type {
   Direction,
   Extension,
+  FileAsset,
   ImageOptions,
   Locale,
   SHEditorAPI,
@@ -248,11 +249,84 @@ function readonlyPage(): void {
     });
 }
 function imagePage(): void {
-  shell("images", `<section class="page-intro"><p class="eyebrow">IMAGE WORKFLOW</p><h1>URL, Base64, or server upload.</h1><p>The demo upload adapter creates a browser object URL to emulate the URL returned by your server. Drop, paste, insert, align, and resize an image below.</p></section>${editorFrame("Image editor", "Three insertion modes + drag and drop")}`);
-  mountEditor(imageContent, { image: { upload: async (file) => URL.createObjectURL(file), maxFileSize: 10 * 1024 * 1024, onError: (error) => showToast(error instanceof Error ? error.message : "Image upload failed") } });
+  shell(
+    "images",
+    `<section class="page-intro"><p class="eyebrow">IMAGE WORKFLOW</p><h1>Upload, browse, and reuse assets.</h1><p>Choose File manager in the image dialog to search a server-backed library, upload, select, delete, insert, align, wrap, and resize an image.</p></section>${editorFrame("Image and file manager", "Asset library + three insertion modes")}`,
+  );
+  let assets: FileAsset[] = [
+    {
+      id: "forest",
+      name: "forest.jpg",
+      url: "https://picsum.photos/id/15/1200/800",
+      thumbnailUrl: "https://picsum.photos/id/15/320/240",
+      width: 1200,
+      height: 800,
+      size: 184000,
+    },
+    {
+      id: "workspace",
+      name: "workspace.jpg",
+      url: "https://picsum.photos/id/20/1200/800",
+      thumbnailUrl: "https://picsum.photos/id/20/320/240",
+      width: 1200,
+      height: 800,
+      size: 211000,
+    },
+    {
+      id: "architecture",
+      name: "architecture.jpg",
+      url: "https://picsum.photos/id/43/1200/800",
+      thumbnailUrl: "https://picsum.photos/id/43/320/240",
+      width: 1200,
+      height: 800,
+      size: 196000,
+    },
+    {
+      id: "mountain",
+      name: "mountain.jpg",
+      url: "https://picsum.photos/id/29/1200/800",
+      thumbnailUrl: "https://picsum.photos/id/29/320/240",
+      width: 1200,
+      height: 800,
+      size: 228000,
+    },
+    {
+      id: "camera",
+      name: "camera.jpg",
+      url: "https://picsum.photos/id/250/1200/800",
+      thumbnailUrl: "https://picsum.photos/id/250/320/240",
+      width: 1200,
+      height: 800,
+      size: 173000,
+    },
+  ];
+  mountEditor(imageContent, {
+    image: {
+      upload: async (file) => URL.createObjectURL(file),
+      fileManager: {
+        list: async ({ search }) =>
+          assets.filter(
+            (asset) =>
+              !search ||
+              asset.name.toLowerCase().includes(search.toLowerCase()),
+          ),
+        delete: async (asset) => {
+          assets = assets.filter((item) => item.id !== asset.id);
+        },
+      },
+      maxFileSize: 10 * 1024 * 1024,
+      onError: (error) =>
+        showToast(
+          error instanceof Error ? error.message : "Image upload failed",
+        ),
+    },
+  });
 }
 function tablePage(): void {
-  shell("tables", `<section class="page-intro"><p class="eyebrow">TABLE WORKFLOW</p><h1>Structured tables, without friction.</h1><p>Create tables and manage selected cells with row, column, merge, split, header and delete commands. Column widths persist in HTML and JSON.</p></section>${editorFrame("Table editor", "Cell selection and column resizing")}`);
+  shell(
+    "tables",
+    `<section class="page-intro"><p class="eyebrow">TABLE WORKFLOW</p><h1>Structured tables, without friction.</h1><p>Create tables and manage selected cells with row, column, merge, split, header and delete commands. Column widths persist in HTML and JSON.</p></section>${editorFrame("Table editor", "Cell selection and column resizing")}`,
+  );
   mountEditor(tableContent);
 }
 function showToast(message: string): void {

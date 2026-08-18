@@ -26,6 +26,28 @@ const ui = createEditorUI(element, {
 });
 ```
 
+## File manager
+
+The optional file manager turns the image dialog into a reusable server asset library with search, upload, selection, metadata, and optional deletion.
+
+```ts
+image: {
+  upload: uploadImage,
+  fileManager: {
+    list: async ({ search, signal }) => {
+      const url = new URL('/api/assets', location.origin);
+      if (search) url.searchParams.set('q', search);
+      return fetch(url, { signal }).then(response => response.json());
+    },
+    delete: async (asset, { signal }) => {
+      await fetch(`/api/assets/${asset.id}`, { method: 'DELETE', signal });
+    },
+  },
+}
+```
+
+Each item returned by `list()` follows `FileAsset`: `{ id, url, name, thumbnailUrl?, mimeType?, size?, width?, height?, createdAt? }`. Search requests cancel the previous request through `AbortSignal`. Deletion is only displayed when the adapter supplies `delete`, and the UI asks for confirmation before calling it. Upload continues to use the shared `image.upload` adapter, keeping storage and authentication policy in the host application.
+
 Use `editor.commands.insertImage({ src, alt, title, width, align })` for URLs and `await editor.insertImageFile(file, 'base64' | 'upload', { alt, title })` for files. HTTP(S), root-relative, and supported image data URLs are accepted. Script URLs and non-image data URLs are rejected. Width and alignment persist in HTML and JSON. Selecting an image exposes four resize handles in the default UI; resize is clamped between 80 and 1600 pixels.
 
 Images also support Word-like text wrapping through `wrap: 'none' | 'left' | 'right'`. Selecting an image opens a contextual layout toolbar for switching between an independent image block, image-left/text-right, and image-right/text-left. The wrap value persists as `data-wrap` in HTML and in JSON, so saved documents retain their layout after reload.
