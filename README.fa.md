@@ -162,7 +162,7 @@ export const telemetry = defineExtension({
 
 ## دموی زنده
 
-دموی hash-routed برای [GitHub Pages](https://mahdiporkar.github.io/SHEditor/) ساخته شده است. اگر 404 دیدید، مالک مخزن باید یک‌بار در **Settings → Pages** گزینهٔ Source را روی **GitHub Actions** بگذارد و workflow `Deploy SHEditor Demo` را اجرا کند. [راهنمای انتشار](docs/GITHUB_PAGES.md)
+دموی hash-routed اکنون روی [GitHub Pages](https://mahdiporkar.github.io/SHEditor/) فعال است. workflow با نام `Deploy SHEditor Demo` پروژه را بررسی و خروجی را روی شاخهٔ `gh-pages` منتشر می‌کند. [راهنمای انتشار](docs/GITHUB_PAGES.md)
 
 ## توسعه و تست
 

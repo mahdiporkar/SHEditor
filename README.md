@@ -177,7 +177,7 @@ Packages avoid browser globals at module top level and initialize DOM state duri
 
 ## Live demo
 
-The static hash-routed playground is intended for [GitHub Pages](https://mahdiporkar.github.io/SHEditor/). If the URL returns 404, the repository owner must first select **Settings → Pages → Source: GitHub Actions**, then rerun `Deploy SHEditor Demo`; see [the setup guide](docs/GITHUB_PAGES.md).
+The static hash-routed playground is live on [GitHub Pages](https://mahdiporkar.github.io/SHEditor/). `Deploy SHEditor Demo` validates the project and publishes to `gh-pages`; see [the setup guide](docs/GITHUB_PAGES.md).
 
 ## Development and testing
 

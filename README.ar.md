@@ -156,7 +156,7 @@ export const telemetry = defineExtension({
 
 ## التجربة الحية
 
-صُممت التجربة ذات hash routes لـ[GitHub Pages](https://mahdiporkar.github.io/SHEditor/). إذا ظهر 404، يجب على مالك المستودع اختيار **Settings → Pages → Source: GitHub Actions** مرة واحدة ثم تشغيل `Deploy SHEditor Demo`. [دليل النشر](docs/GITHUB_PAGES.md)
+أصبحت التجربة ذات hash routes متاحة على [GitHub Pages](https://mahdiporkar.github.io/SHEditor/). يتحقق workflow باسم `Deploy SHEditor Demo` من المشروع وينشر الناتج إلى فرع `gh-pages`. [دليل النشر](docs/GITHUB_PAGES.md)
 
 ## التطوير والاختبار
 
