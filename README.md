@@ -17,7 +17,7 @@ A free, MIT-licensed, framework-agnostic WYSIWYG HTML editing platform built wit
 - First-class Persian/Arabic RTL, English, light/dark/custom themes, and accessible controls
 - One core shared by Vanilla TypeScript, React, Vue 3, and Angular
 
-Images, tables, Markdown, source editing, document features, import/export, comments, track changes, revisions, and collaboration remain planned or partial. See the matrix for exact status.
+Images (URL, Base64, server upload, drop/paste, and resize) and structured tables are available. Markdown, source editing, document features, import/export, comments, track changes, revisions, and collaboration remain planned or partial. See the matrix for exact status.
 
 ## Installation
 
@@ -127,11 +127,11 @@ Typed dictionaries cover `en`, `fa`, and `ar`. Direction is applied through the 
 
 ## Images and image upload
 
-The professional image model, upload adapter, drag/drop, resize, metadata, caption, linking, and responsive image features are **missing** and scheduled for the next vertical milestone. No fake image API or endpoint is documented.
+Images support URL, Base64 and an asynchronous server upload adapter, plus drop/paste, resize, alt/title and alignment. See [Images and tables](docs/IMAGES_AND_TABLES.md) for the adapter contract. Captions, linked images, progress/retry UI, and responsive sources remain planned.
 
 ## Tables
 
-Professional table nodes, selection, row/column operations, merge/split, resize, clipboard, and serialization are **missing**. The demo labels this honestly.
+Schema-backed tables include cell selection, row/column operations, merge/split, headers, column resizing, keyboard navigation, and HTML/JSON serialization. The [Images and tables guide](docs/IMAGES_AND_TABLES.md) lists the command API. Cell-property UI and dedicated E2E coverage remain planned.
 
 ## Source editing and Markdown
 

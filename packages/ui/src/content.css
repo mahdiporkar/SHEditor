@@ -1,6 +1,155 @@
-.she-content .she-prosemirror{min-height:300px;padding:32px 36px;outline:none;line-height:1.8;color:var(--she-color-text)}
-.she-content .she-prosemirror p{margin:.65em 0}.she-content .she-prosemirror h1{font-size:2em}.she-content .she-prosemirror h2{font-size:1.55em}.she-content .she-prosemirror h3{font-size:1.25em}
-.she-content .she-prosemirror blockquote{margin:1em 0;padding:.3em 1em;border-inline-start:4px solid var(--she-color-primary);color:var(--she-color-muted);background:var(--she-color-surface);border-radius:6px}
-.she-content .she-prosemirror code{background:var(--she-color-surface);padding:.15em .35em;border-radius:5px}.she-content .she-prosemirror pre{background:#171822;color:#f6f6f8;padding:16px;border-radius:10px;overflow:auto}
-.she-content .she-prosemirror:empty:before{content:attr(data-placeholder);color:var(--she-color-muted);pointer-events:none;position:absolute}.she-content[dir=rtl]{text-align:right}
-@media(max-width:640px){.she-content .she-prosemirror{padding:22px 18px;min-height:260px}}
+.she-content .she-prosemirror {
+  min-height: 300px;
+  padding: 32px 36px;
+  outline: none;
+  line-height: 1.8;
+  color: var(--she-color-text);
+}
+.she-content .she-prosemirror p {
+  margin: 0.65em 0;
+}
+.she-content .she-prosemirror h1 {
+  font-size: 2em;
+}
+.she-content .she-prosemirror h2 {
+  font-size: 1.55em;
+}
+.she-content .she-prosemirror h3 {
+  font-size: 1.25em;
+}
+.she-content .she-prosemirror blockquote {
+  margin: 1em 0;
+  padding: 0.3em 1em;
+  border-inline-start: 4px solid var(--she-color-primary);
+  color: var(--she-color-muted);
+  background: var(--she-color-surface);
+  border-radius: 6px;
+}
+.she-content .she-prosemirror code {
+  background: var(--she-color-surface);
+  padding: 0.15em 0.35em;
+  border-radius: 5px;
+}
+.she-content .she-prosemirror pre {
+  background: #171822;
+  color: #f6f6f8;
+  padding: 16px;
+  border-radius: 10px;
+  overflow: auto;
+}
+.she-content .she-prosemirror:empty:before {
+  content: attr(data-placeholder);
+  color: var(--she-color-muted);
+  pointer-events: none;
+  position: absolute;
+}
+.she-content[dir="rtl"] {
+  text-align: right;
+}
+@media (max-width: 640px) {
+  .she-content .she-prosemirror {
+    padding: 22px 18px;
+    min-height: 260px;
+  }
+}
+.she-content .she-prosemirror table {
+  border-collapse: collapse;
+  table-layout: fixed;
+  width: 100%;
+  margin: 1.2em 0;
+  overflow: hidden;
+}
+.she-content .she-prosemirror td,
+.she-content .she-prosemirror th {
+  position: relative;
+  min-width: 70px;
+  border: 1px solid var(--she-color-border);
+  padding: 8px 10px;
+  vertical-align: top;
+}
+.she-content .she-prosemirror th {
+  background: var(--she-color-surface);
+  font-weight: 700;
+}
+.she-content .selectedCell:after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--she-color-primary) 18%, transparent);
+  pointer-events: none;
+}
+.she-content .column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--she-color-primary);
+  pointer-events: none;
+}
+.she-content .resize-cursor {
+  cursor: col-resize;
+}
+.she-image-node {
+  position: relative;
+  display: table;
+  max-width: 100%;
+  margin: 1em auto;
+  line-height: 0;
+}
+.she-image-node[data-align="left"] {
+  margin-inline: 0 auto;
+}
+.she-image-node[data-align="right"] {
+  margin-inline: auto 0;
+}
+.she-image-node img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+}
+.she-image-node.ProseMirror-selectednode {
+  outline: 3px solid var(--she-color-primary);
+  outline-offset: 3px;
+}
+.she-image-handle {
+  display: none;
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #fff;
+  border: 2px solid var(--she-color-primary);
+  border-radius: 50%;
+}
+.ProseMirror-selectednode .she-image-handle {
+  display: block;
+}
+.she-image-handle--nw {
+  left: -7px;
+  top: -7px;
+}
+.she-image-handle--ne {
+  right: -7px;
+  top: -7px;
+}
+.she-image-handle--sw {
+  left: -7px;
+  bottom: -7px;
+}
+.she-image-handle--se {
+  right: -7px;
+  bottom: -7px;
+}
+.she-prosemirror > img.she-image {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: 1em auto;
+}
+.she-prosemirror > img.she-image--left {
+  margin-inline: 0 auto;
+}
+.she-prosemirror > img.she-image--right {
+  margin-inline: auto 0;
+}

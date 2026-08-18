@@ -19,7 +19,7 @@ SHEditor یک پلتفرم رایگان و مستقل از فریم‌ورک ب�
 - پشتیبانی بومی فارسی/عربی RTL، انگلیسی، پوسته روشن/تیره و کنترل‌های دسترس‌پذیر
 - یک هستهٔ مشترک برای Vanilla TypeScript، React، Vue 3 و Angular
 
-تصویر، جدول، Markdown، Source Editing، امکانات سند، import/export، comment، track changes، revision و collaboration هنوز کامل نیستند. وضعیت دقیق در ماتریس ثبت شده است.
+تصویر (URL، Base64، آپلود سرور، drag/drop، paste و resize) و جدول‌های ساختاریافته با مدیریت سطر/ستون/سلول در دسترس‌اند. Markdown، Source Editing، امکانات سند، import/export، comment، track changes، revision و collaboration هنوز کامل نیستند. وضعیت دقیق در ماتریس ثبت شده است.
 
 ## نصب و شروع سریع
 
@@ -123,11 +123,11 @@ createEditor({ locale: 'ar', direction: 'rtl', content: '<p>محرر عربي و
 
 ## تصویر و Upload Adapter
 
-مدل حرفه‌ای تصویر، picker، upload adapter، drag/drop، paste، resize، caption، alt/title، alignment و linked/responsive image **پیاده نشده‌اند**. endpoint یا API ساختگی مستند نشده است.
+تصویر از URL، Base64 و upload adapter سرور پشتیبانی می‌کند. drag/drop، paste، resize، alt/title و alignment نیز پیاده شده‌اند. قرارداد و نمونه کامل adapter در [راهنمای تصویر و جدول](docs/IMAGES_AND_TABLES.md) آمده است. caption و responsive sources هنوز برنامه آینده‌اند.
 
 ## جدول
 
-مدل جدول، cell selection، row/column، merge/split، resize، clipboard و serialization حرفه‌ای **پیاده نشده‌اند** و در دمو صریحاً Coming Soon هستند.
+مدل جدول، cell selection، افزودن/حذف row و column، merge/split، header، resize ستون و serialization در HTML/JSON پیاده شده و در دمو قابل آزمایش است. جزئیات commandها در [راهنمای تصویر و جدول](docs/IMAGES_AND_TABLES.md) ثبت شده است.
 
 ## Source، Markdown، سند و Import/Export
 

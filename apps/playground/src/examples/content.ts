@@ -5,6 +5,8 @@ export const rtlContent = `<h1>ویرایشگر حرفه‌ای SHEditor</h1><p>
 export const extensionContent = `<h1>Custom extension</h1><p>The playground registers a real ProseMirror plugin through SHEditor’s public <code>defineExtension</code> API.</p><blockquote>💡 This blockquote receives a callout treatment from plugin decorations—without changing SHEditor core.</blockquote><p>Edit the callout or undo your changes. It remains part of the real document model.</p>`;
 
 export const readonlyContent = `<h1>One document, two modes</h1><p>This content uses the same SHEditor schema and rendering in editable and readonly states.</p><blockquote>Toggle editing without recreating the editor.</blockquote><p>The command calls the real <code>editor.setEditable()</code> API.</p>`;
+export const imageContent = `<h1>Three ways to add images</h1><p>Use the image button for a URL, embedded Base64 file, or the configured upload adapter. You can also drop or paste an image. Select an image and drag a corner handle to resize it.</p>`;
+export const tableContent = `<h1>Professional tables</h1><p>Click inside a cell to use the row, column, merge, split, header, and delete controls. Drag column boundaries to resize.</p><table><tbody><tr><th><p>Feature</p></th><th><p>Status</p></th><th><p>Owner</p></th></tr><tr><td><p>Image upload</p></td><td><p>Ready</p></td><td><p>Media</p></td></tr><tr><td><p>Tables</p></td><td><p>Ready</p></td><td><p>Editor</p></td></tr></tbody></table><p></p>`;
 
 export const snippets = {
   react: `import { useState } from 'react';\nimport { SHEditor } from '@sheditor/react';\n\nexport function ArticleEditor() {\n  const [content, setContent] = useState('<p>Hello SHEditor</p>');\n  return <SHEditor value={content} onChange={setContent} />;\n}`,

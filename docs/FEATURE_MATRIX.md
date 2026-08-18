@@ -50,8 +50,8 @@ A row is complete only when its applicable model, commands, UI, keyboard behavio
 | Visual source editing | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | Demo inspector is read-only, not source mode |
 | Markdown | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | No getMarkdown/setMarkdown claims |
 | **Images, tables, media** |||||||||||
-| Professional image ecosystem | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | Roadmap | Milestone 2; no fake toolbar |
-| Professional tables | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | Roadmap | Milestone 3; no fake toolbar |
+| Image insertion/upload/resize | 🟡 | Unit/XSS | ✅ | ✅ | ✅ | ✅ | HTML/JSON | ✅ | ✅ | URL, Base64, adapter, drop/paste, alt/title/alignment; captions and progress UI pending |
+| Professional tables | 🟡 | Unit | ✅ | ✅ | ✅ | ✅ | HTML/JSON | ✅ | ✅ | Cell selection, rows/columns, merge/split, headers and resize; cell-property UI/E2E pending |
 | Media/audio/video/embed | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | Planned modular package |
 | Attachments/asset manager | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | Planned provider interface |
 | Math/Mermaid | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | 🔴 | Planned optional extensions |

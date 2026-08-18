@@ -5,3 +5,4 @@
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
 body{overflow-x:hidden}.editor-card{width:100%;max-width:100%;min-width:0}.she-content .she-prosemirror{overflow-wrap:anywhere;min-width:0}
 @media(max-width:390px){.editor-card>header{flex-wrap:wrap}.editor-card>header>div:first-child{min-width:0}.editor-actions{margin-inline-start:auto}.editor-actions .secondary-button{height:34px}.rtl-intro h1{font-size:34px;overflow-wrap:anywhere}.she-toolbar{max-width:100%}}
+.site-header nav small{display:none}

@@ -4,13 +4,13 @@
 
 Core document model, base formatting, lists, blockquotes, links, history, typed commands/options, events, HTML/JSON, sanitization, optional default UI, theming, RTL, three locales, framework adapters, unit tests and a production playground.
 
-## 0.2 Media
+## 0.2 Media (implemented foundation)
 
-Complete image vertical slice: async upload adapter, paste/drop/URL flows, progress/retry, resize, caption, accessibility metadata, alignment, persistence and E2E tests.
+Image schema, async upload adapter, Base64/URL/file flows, paste/drop, resize, alt/title, alignment, persistence and unit tests are implemented. Captions, upload progress/retry UI and responsive source sets remain planned.
 
-## 0.3 Tables
+## 0.3 Tables (implemented foundation)
 
-Table model and UI, cell selection, row/column operations, merge/split, headers, resize, keyboard navigation, HTML round-trip and E2E tests.
+Table model/UI, cell selection, row/column operations, merge/split, headers, column resize, keyboard navigation and HTML/JSON round-trip are implemented. Cell-property UI, captioning and dedicated browser E2E coverage remain planned.
 
 ## 0.4 Editing UX and interoperability
 

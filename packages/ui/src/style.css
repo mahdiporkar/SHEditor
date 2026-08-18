@@ -1,10 +1,193 @@
-.she-editor{--she-color-primary:#6750f2;--she-color-bg:#fff;--she-color-surface:#f6f7fb;--she-color-text:#20222b;--she-color-muted:#666b7a;--she-color-border:#e4e6ef;--she-radius-md:12px;--she-shadow-dropdown:0 16px 44px rgba(34,39,75,.12);--she-toolbar-height:52px;color:var(--she-color-text);background:var(--she-color-bg);border:1px solid var(--she-color-border);border-radius:16px;box-shadow:var(--she-shadow-dropdown);overflow:hidden;font-family:Inter,Vazirmatn,"Noto Sans Arabic",system-ui,sans-serif}
-.she-toolbar{min-height:var(--she-toolbar-height);display:flex;gap:4px;align-items:center;padding:8px 10px;background:var(--she-color-surface);border-bottom:1px solid var(--she-color-border);overflow-x:auto}
-.she-button,.she-select{border:0;background:transparent;color:var(--she-color-text);border-radius:8px;min-width:36px;height:36px;padding:0 10px;font:600 14px inherit;cursor:pointer}
-.she-button:hover,.she-select:hover{background:color-mix(in srgb,var(--she-color-primary) 10%,transparent)}
-.she-button[aria-pressed=true]{background:var(--she-color-primary);color:#fff}.she-button:focus-visible,.she-select:focus-visible{outline:3px solid color-mix(in srgb,var(--she-color-primary) 35%,transparent);outline-offset:1px}
-.she-select{min-width:120px}.she-surface{background:var(--she-color-bg)}
-.she-editor[data-theme=dark],.she-editor.she-dark{--she-color-bg:#171822;--she-color-surface:#21232f;--she-color-text:#f3f4f8;--she-color-muted:#afb2c1;--she-color-border:#343746;--she-shadow-dropdown:0 16px 44px rgba(0,0,0,.3)}
-@media(max-width:640px){.she-editor{border-radius:12px}.she-toolbar{padding:6px}.she-button{min-width:40px}}
-@media print{.she-toolbar{display:none}.she-editor{border:0;box-shadow:none}}
-.she-color{width:30px;height:30px;padding:4px;border:0;border-radius:8px;background:transparent;cursor:pointer}.she-color::-webkit-color-swatch{border:0;border-radius:5px}.she-highlight{background:color-mix(in srgb,var(--she-color-primary) 8%,transparent)}.she-align{min-width:76px}
+.she-editor {
+  --she-color-primary: #6750f2;
+  --she-color-bg: #fff;
+  --she-color-surface: #f6f7fb;
+  --she-color-text: #20222b;
+  --she-color-muted: #666b7a;
+  --she-color-border: #e4e6ef;
+  --she-radius-md: 12px;
+  --she-shadow-dropdown: 0 16px 44px rgba(34, 39, 75, 0.12);
+  --she-toolbar-height: 52px;
+  color: var(--she-color-text);
+  background: var(--she-color-bg);
+  border: 1px solid var(--she-color-border);
+  border-radius: 16px;
+  box-shadow: var(--she-shadow-dropdown);
+  overflow: hidden;
+  font-family: Inter, Vazirmatn, "Noto Sans Arabic", system-ui, sans-serif;
+}
+.she-toolbar {
+  min-height: var(--she-toolbar-height);
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding: 8px 10px;
+  background: var(--she-color-surface);
+  border-bottom: 1px solid var(--she-color-border);
+  overflow-x: auto;
+}
+.she-button,
+.she-select {
+  border: 0;
+  background: transparent;
+  color: var(--she-color-text);
+  border-radius: 8px;
+  min-width: 36px;
+  height: 36px;
+  padding: 0 10px;
+  font: 600 14px inherit;
+  cursor: pointer;
+}
+.she-button:hover,
+.she-select:hover {
+  background: color-mix(in srgb, var(--she-color-primary) 10%, transparent);
+}
+.she-button[aria-pressed="true"] {
+  background: var(--she-color-primary);
+  color: #fff;
+}
+.she-button:focus-visible,
+.she-select:focus-visible {
+  outline: 3px solid
+    color-mix(in srgb, var(--she-color-primary) 35%, transparent);
+  outline-offset: 1px;
+}
+.she-select {
+  min-width: 120px;
+}
+.she-surface {
+  background: var(--she-color-bg);
+}
+.she-editor[data-theme="dark"],
+.she-editor.she-dark {
+  --she-color-bg: #171822;
+  --she-color-surface: #21232f;
+  --she-color-text: #f3f4f8;
+  --she-color-muted: #afb2c1;
+  --she-color-border: #343746;
+  --she-shadow-dropdown: 0 16px 44px rgba(0, 0, 0, 0.3);
+}
+@media (max-width: 640px) {
+  .she-editor {
+    border-radius: 12px;
+  }
+  .she-toolbar {
+    padding: 6px;
+  }
+  .she-button {
+    min-width: 40px;
+  }
+}
+@media print {
+  .she-toolbar {
+    display: none;
+  }
+  .she-editor {
+    border: 0;
+    box-shadow: none;
+  }
+}
+.she-color {
+  width: 30px;
+  height: 30px;
+  padding: 4px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  cursor: pointer;
+}
+.she-color::-webkit-color-swatch {
+  border: 0;
+  border-radius: 5px;
+}
+.she-highlight {
+  background: color-mix(in srgb, var(--she-color-primary) 8%, transparent);
+}
+.she-align {
+  min-width: 76px;
+}
+.she-table-tools {
+  display: flex;
+  gap: 2px;
+  border-inline-start: 1px solid var(--she-color-border);
+  padding-inline-start: 4px;
+}
+.she-dialog {
+  width: min(480px, calc(100vw - 32px));
+  border: 0;
+  border-radius: 16px;
+  padding: 0;
+  color: var(--she-color-text);
+  background: var(--she-color-bg);
+  box-shadow: 0 24px 80px #0005;
+}
+.she-dialog::backdrop {
+  background: #12131a99;
+  backdrop-filter: blur(3px);
+}
+.she-dialog header,
+.she-dialog footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--she-color-border);
+}
+.she-dialog footer {
+  border: 0;
+  border-top: 1px solid var(--she-color-border);
+  justify-content: flex-end;
+  gap: 8px;
+}
+.she-dialog header button {
+  font-size: 24px;
+  border: 0;
+  background: none;
+  color: inherit;
+}
+.she-dialog-body {
+  padding: 20px;
+  display: grid;
+  gap: 14px;
+}
+.she-dialog label {
+  display: grid;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+.she-dialog input,
+.she-dialog select {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--she-color-border);
+  border-radius: 8px;
+  background: var(--she-color-bg);
+  color: inherit;
+}
+.she-dialog-submit,
+.she-dialog-cancel {
+  border: 0;
+  border-radius: 8px;
+  padding: 9px 16px;
+  cursor: pointer;
+}
+.she-dialog-submit {
+  background: var(--she-color-primary);
+  color: white;
+}
+.she-grid-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.she-dialog .she-checkbox {
+  display: flex;
+  grid-auto-flow: column;
+  justify-content: start;
+  align-items: center;
+}
+.she-dialog .she-checkbox input {
+  width: auto;
+}
