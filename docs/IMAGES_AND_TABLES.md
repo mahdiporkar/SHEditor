@@ -7,14 +7,18 @@ SHEditor supports URL insertion, Base64 embedding, clipboard/drop insertion, and
 ```ts
 const ui = createEditorUI(element, {
   image: {
-    acceptedTypes: ['image/png', 'image/jpeg', 'image/webp'],
+    acceptedTypes: ["image/png", "image/jpeg", "image/webp"],
     maxFileSize: 5 * 1024 * 1024,
     allowBase64: true,
     upload: async (file, { signal }) => {
       const body = new FormData();
-      body.append('image', file);
-      const response = await fetch('/api/images', { method: 'POST', body, signal });
-      if (!response.ok) throw new Error('Upload failed');
+      body.append("image", file);
+      const response = await fetch("/api/images", {
+        method: "POST",
+        body,
+        signal,
+      });
+      if (!response.ok) throw new Error("Upload failed");
       return (await response.json()) as { url: string };
     },
     onError: console.error,
@@ -29,6 +33,8 @@ Dropped and pasted image files choose `upload` when an adapter exists, otherwise
 ## Table commands
 
 `insertTable(rows, columns, withHeaderRow)` creates a schema-backed table. The default UI also exposes commands for adding/deleting rows and columns, merging/splitting selected cells, toggling a header row, and deleting the table. The complete command API additionally includes `addRowBefore`, `addColumnBefore`, and `toggleHeaderColumn`.
+
+The table toolbar button opens a graphical 10×10 size picker when the cursor is outside a table. When the cursor is inside a table, the same button becomes a contextual management menu grouped into row, column, cell, header, and destructive operations. On narrow screens it is presented as a bottom sheet, and Persian/Arabic layouts follow RTL positioning.
 
 Cell selections, keyboard navigation, merged cells, and column-resize persistence are provided by the ProseMirror table model. HTML and JSON round-trip through the same sanitizer and schema as the rest of the document.
 

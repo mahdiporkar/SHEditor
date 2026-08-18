@@ -179,35 +179,209 @@ export function createEditorUI(
   tableButton.textContent = "▦";
   tableButton.title = locale === "fa" ? "درج جدول" : "Insert table";
   tableButton.setAttribute("aria-label", tableButton.title);
-  tableButton.addEventListener("click", () => openTableDialog());
+  tableButton.setAttribute("aria-haspopup", "menu");
+  tableButton.setAttribute("aria-expanded", "false");
   toolbar.append(tableButton);
-  const tableTools = document.createElement("div");
-  tableTools.className = "she-table-tools";
-  tableTools.setAttribute("aria-label", "Table controls");
-  const tableActions: Array<[string, keyof typeof editor.commands]> = [
-    ["+↕", "addRowAfter"],
-    ["−↕", "deleteRow"],
-    ["+↔", "addColumnAfter"],
-    ["−↔", "deleteColumn"],
-    ["Merge", "mergeCells"],
-    ["Split", "splitCell"],
-    ["TH", "toggleHeaderRow"],
-    ["×", "deleteTable"],
-  ];
-  for (const [label, command] of tableActions) {
+  let tableMenu: HTMLElement | null = null;
+  const inTable = () => {
+    const { $from } = editor.state.selection;
+    for (let depth = $from.depth; depth > 0; depth--)
+      if ($from.node(depth).type.name === "table") return true;
+    return false;
+  };
+  const closeTableMenu = () => {
+    tableMenu?.remove();
+    tableMenu = null;
+    tableButton.setAttribute("aria-expanded", "false");
+    document.removeEventListener("pointerdown", outsideTableMenu);
+  };
+  const tableCommand = (command: keyof typeof editor.commands) => {
+    (editor.commands[command] as () => boolean)();
+    closeTableMenu();
+    editor.focus();
+  };
+  const tableLabels =
+    locale === "fa"
+      ? {
+          title: "درج جدول",
+          manage: "مدیریت جدول",
+          selected: "سلول انتخاب‌شده",
+          row: "سطر",
+          column: "ستون",
+          cell: "سلول",
+          before: "افزودن قبل",
+          after: "افزودن بعد",
+          remove: "حذف",
+          merge: "ادغام سلول‌ها",
+          split: "تفکیک سلول",
+          headerRow: "سطر عنوان",
+          headerColumn: "ستون عنوان",
+          deleteTable: "حذف کامل جدول",
+          custom: "اندازه دلخواه…",
+          choose: "انتخاب اندازه",
+        }
+      : {
+          title: "Insert table",
+          manage: "Manage table",
+          selected: "Selected cell",
+          row: "Row",
+          column: "Column",
+          cell: "Cell",
+          before: "Insert before",
+          after: "Insert after",
+          remove: "Delete",
+          merge: "Merge cells",
+          split: "Split cell",
+          headerRow: "Header row",
+          headerColumn: "Header column",
+          deleteTable: "Delete table",
+          custom: "Custom size…",
+          choose: "Choose a size",
+        };
+  const icon = (
+    name: "before" | "after" | "delete" | "merge" | "split" | "header",
+  ) =>
+    ({
+      before: "＋←",
+      after: "→＋",
+      delete: "−",
+      merge: "⇥⇤",
+      split: "⇤│⇥",
+      header: "▦",
+    })[name];
+  const addMenuAction = (
+    container: HTMLElement,
+    label: string,
+    glyph: string,
+    command: keyof typeof editor.commands,
+    danger = false,
+  ) => {
     const button = document.createElement("button");
     button.type = "button";
-    button.className = "she-button";
-    button.textContent = label;
-    button.title = command;
+    button.className = `she-table-action${danger ? " she-table-action--danger" : ""}`;
+    button.innerHTML = `<span aria-hidden="true">${glyph}</span><small>${label}</small>`;
     button.addEventListener("mousedown", (event) => event.preventDefault());
-    button.addEventListener("click", () => {
-      (editor.commands[command] as () => boolean)();
-      editor.focus();
-    });
-    tableTools.append(button);
-  }
-  toolbar.append(tableTools);
+    button.addEventListener("click", () => tableCommand(command));
+    container.append(button);
+  };
+  const openTableMenu = () => {
+    if (tableMenu) {
+      closeTableMenu();
+      return;
+    }
+    const menu = document.createElement("div");
+    tableMenu = menu;
+    menu.className = "she-table-menu";
+    menu.classList.toggle("she-dark", host.classList.contains("she-dark"));
+    menu.dir = host.dir;
+    menu.setAttribute("role", "menu");
+    const rect = tableButton.getBoundingClientRect();
+    menu.style.top = `${rect.bottom + 8}px`;
+    if (host.dir === "rtl")
+      menu.style.right = `${Math.max(12, window.innerWidth - rect.right)}px`;
+    else
+      menu.style.left = `${Math.max(12, Math.min(rect.left, window.innerWidth - 344))}px`;
+    if (!inTable()) {
+      menu.innerHTML = `<div class="she-table-menu-head"><span class="she-table-menu-icon">▦</span><div><strong>${tableLabels.title}</strong><small>${tableLabels.choose}</small></div></div><div class="she-table-size" aria-label="${tableLabels.choose}"><strong data-size>3 × 3</strong><div class="she-table-grid"></div></div><button type="button" class="she-table-custom">⚙ <span>${tableLabels.custom}</span></button>`;
+      const grid = menu.querySelector<HTMLElement>(".she-table-grid")!;
+      const size = menu.querySelector<HTMLElement>("[data-size]")!;
+      for (let row = 1; row <= 10; row++)
+        for (let col = 1; col <= 10; col++) {
+          const cell = document.createElement("button");
+          cell.type = "button";
+          cell.className = "she-table-grid-cell";
+          cell.classList.toggle("is-selected", row <= 3 && col <= 3);
+          cell.dataset.row = String(row);
+          cell.dataset.col = String(col);
+          cell.setAttribute("aria-label", `${row} × ${col}`);
+          cell.addEventListener("pointerenter", () => {
+            size.textContent = `${row} × ${col}`;
+            grid
+              .querySelectorAll<HTMLElement>(".she-table-grid-cell")
+              .forEach((item) =>
+                item.classList.toggle(
+                  "is-selected",
+                  Number(item.dataset.row) <= row &&
+                    Number(item.dataset.col) <= col,
+                ),
+              );
+          });
+          cell.addEventListener("click", () => {
+            editor.commands.insertTable(row, col, true);
+            closeTableMenu();
+            editor.focus();
+          });
+          grid.append(cell);
+        }
+      menu.querySelector(".she-table-custom")!.addEventListener("click", () => {
+        closeTableMenu();
+        openTableDialog();
+      });
+    } else {
+      menu.innerHTML = `<div class="she-table-menu-head"><span class="she-table-menu-icon">▦</span><div><strong>${tableLabels.manage}</strong><small>${tableLabels.selected}</small></div></div>`;
+      const groups: Array<
+        [
+          string,
+          Array<[string, string, keyof typeof editor.commands, boolean?]>,
+        ]
+      > = [
+        [
+          tableLabels.row,
+          [
+            [tableLabels.before, icon("before"), "addRowBefore"],
+            [tableLabels.after, icon("after"), "addRowAfter"],
+            [tableLabels.remove, icon("delete"), "deleteRow"],
+          ],
+        ],
+        [
+          tableLabels.column,
+          [
+            [tableLabels.before, icon("before"), "addColumnBefore"],
+            [tableLabels.after, icon("after"), "addColumnAfter"],
+            [tableLabels.remove, icon("delete"), "deleteColumn"],
+          ],
+        ],
+        [
+          tableLabels.cell,
+          [
+            [tableLabels.merge, icon("merge"), "mergeCells"],
+            [tableLabels.split, icon("split"), "splitCell"],
+            [tableLabels.headerRow, icon("header"), "toggleHeaderRow"],
+            [tableLabels.headerColumn, icon("header"), "toggleHeaderColumn"],
+          ],
+        ],
+      ];
+      for (const [title, actions] of groups) {
+        const section = document.createElement("section");
+        section.className = "she-table-menu-section";
+        section.innerHTML = `<h4>${title}</h4><div></div>`;
+        const actionsHost = section.querySelector<HTMLElement>("div")!;
+        for (const [label, glyph, command, danger] of actions)
+          addMenuAction(actionsHost, label, glyph, command, danger);
+        menu.append(section);
+      }
+      const danger = document.createElement("div");
+      danger.className = "she-table-menu-danger";
+      addMenuAction(danger, tableLabels.deleteTable, "⌫", "deleteTable", true);
+      menu.append(danger);
+    }
+    document.body.append(menu);
+    tableButton.setAttribute("aria-expanded", "true");
+    window.setTimeout(
+      () => document.addEventListener("pointerdown", outsideTableMenu),
+      0,
+    );
+  };
+  const outsideTableMenu = (event: PointerEvent) => {
+    if (
+      tableMenu?.contains(event.target as Node) ||
+      tableButton.contains(event.target as Node)
+    )
+      return;
+    closeTableMenu();
+  };
+  tableButton.addEventListener("mousedown", (event) => event.preventDefault());
+  tableButton.addEventListener("click", openTableMenu);
   const makeDialog = (title: string) => {
     const dialog = document.createElement("dialog");
     dialog.className = "she-dialog";
@@ -290,6 +464,7 @@ export function createEditorUI(
     element: host,
     destroy: () => {
       off();
+      closeTableMenu();
       editor.destroy();
       host.replaceChildren();
       host.classList.remove("she-editor");
